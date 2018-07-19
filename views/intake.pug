@@ -16,12 +16,12 @@ block content
                 td.intakeField
                     span.main-label Status:
                 td
-                    intake.phase
+                    =intake.phase
             tr.intakeRow
                 td.intakeField
                     span.main-label Package:
                 td
-                    intake.package
+                    =intake.package
             tr.intakeRow
                 td.intakeField
                     span.main-label Attachments:
@@ -54,27 +54,27 @@ block content
                 td.intakeField
                     span.main-label Approver and PAES Number:
                 td
-                    intake.paesNumber
+                    =intake.paesNumber
             tr.intakeRow
                 td.intakeField
                     span.main-label Offer Configurator:
                 td
-                    intake.offerConfigurator
+                    =intake.offerConfigurator
             tr.intakeRow
                 td.intakeField
                     span.main-label Offer Configurator Estimate:
                 td
-                    intake.offerConfiguratorEstimate
+                    =intake.offerConfiguratorEstimate
             tr.intakeRow
                 td.intakeField
                     span.main-label QA:
                 td
-                    intake.qa
+                    =intake.qa
             tr
                 td.intakeField
                     span.main-label QA Estimate:
                 td
-                    intake.qaEstimate
+                    =intake.qaEstimate
     hr
     if user
         if user.type=='PM' || user.type=='SU' || user.type=='QA' || user.type=='OC'
