@@ -1,0 +1,67 @@
+extends layout
+
+block content
+    h1 Requests
+    br
+    p Click on any column headers to sort requests by that field
+    hr
+    if user
+        table.table-dark.table-hover.table-striped#request-table
+            thead
+                tr
+                    th Request Name
+                    th Description
+                    th Business Justification
+                    th Priority
+                    th Request Date
+                    th Target Date
+                    th Requested By
+            tbody
+                each intake, i in intakes
+                    tr(id=intake._id)
+                        td
+                            a(href="/intakes/"+intake._id+"/version/0", style='color:white')= intake.requestName
+                        td !{intake.current.description}
+                        td !{intake.justification} 
+                        if user.type=="PM" || user.type=="SU"
+                            td.priority(contenteditable='true')= intake.priority
+                        else
+                            td= intake.priority
+                        td= intake.requestDate.toDateString()
+                        if intake.current.targetDate
+                            //td= intake.current.targetDate.toDateString()
+                            td= intake.current.targetDate
+                        else
+                            td 
+                        td= intake.requestor
+        hr
+        if user.type=="PM" || user.type=="SU"
+            button.btn.btn-primary(onclick="submitPriorities()") Submit
+            a.btn.btn-danger(href='/intakes') Cancel
+    else
+        table.table-dark.table-hover.table-striped#request-table
+            thead
+                tr
+                    th Request Name
+                    th Description
+                    th Business Justification
+                    th Priority
+                    th Request Date
+                    th Target Date
+                    th Requested By
+            tbody
+                each intake, i in intakes
+                    tr
+                        td
+                            a(href="/intakes/"+intake._id+"/version/0")= intake.requestName
+                        td !{intake.current.description}
+                        td !{intake.justification} 
+                        td= intake.priority
+                        td= intake.requestDate.toDateString()
+                        if intake.current.targetDate
+                            //td= intake.current.targetDate.toDateString()
+                            td= intake.current.targetDate
+                        else
+                            td 
+                        td= intake.requestor
+    script(src='/javascripts/priorityUpdate.js')

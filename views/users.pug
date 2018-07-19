@@ -1,0 +1,13 @@
+extends layout
+
+block content
+    h1 Users
+    br
+    hr
+    each person, i in people
+        if user.type=="SU"
+            a(href="/users/edit/"+person._id)= person.name
+        else 
+            p= person.name
+        p User Type: #{person.type}
+        hr

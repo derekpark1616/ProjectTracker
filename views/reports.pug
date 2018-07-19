@@ -1,0 +1,68 @@
+extends layout
+
+block content
+    h1 Reporting
+    br
+    p Click on any button to export desired excel sheet
+    hr
+    button.btn.btn-primary(data-toggle="modal", data-target="#exportInProgressModal") Requests in Progress
+    br
+    br
+    button.btn.btn-primary(data-toggle="modal", data-target="#exportCompletedModal") Completed Requests
+    br
+    br
+    button.btn.btn-primary(data-toggle="modal", data-target="#exportVersionModal") Versions
+    br
+    br
+    button.btn.btn-primary(data-toggle="modal", data-target="#exportStatusModal") Status Report
+
+    div#exportInProgressModal.modal.fade(role="dialog")
+        div.modal-dialog
+            div.modal-content
+                div.modal-body
+                    p Export Requests in Progress?
+                div.modal-footer
+                    a.btn.btn-primary(href='/reports/in-progress', onclick="$('#exportInProgressModal').modal('hide')") Export
+                    button.btn.btn-danger(data-dismiss="modal") Cancel
+
+    div#exportCompletedModal.modal.fade(role="dialog")
+        div.modal-dialog
+            div.modal-content
+                div.modal-body
+                    p Export Completed Requests?
+                div.modal-footer
+                    a.btn.btn-primary(href='/reports/completed', onclick="$('#exportCompletedModal').modal('hide')") Export
+                    button.btn.btn-danger(data-dismiss="modal") Cancel
+
+    div#exportVersionModal.modal.fade(role="dialog")
+        div.modal-dialog
+            div.modal-content
+                div.modal-body
+                    p Export Version Report?
+                    form(method='POST', action='/reports/versions')
+                        #form-group 
+                            label.main-label From
+                            input.form-control(name='from', type='date')
+                        #form-group 
+                            label.main-label To
+                            input.form-control(name='to', type='date')
+                        br
+                        input.btn.btn-primary(type='submit', onclick="$('#exportVersionModal').modal('hide')", value='Export')
+                        button.btn.btn-danger(data-dismiss="modal") Cancel
+    
+    div#exportStatusModal.modal.fade(role="dialog")
+        div.modal-dialog
+            div.modal-content
+                div.modal-body
+                    p Export Status Report?
+                    form(method='POST', action='/reports/status')
+                        #form-group 
+                            label.main-label From
+                            input.form-control(name='from', type='date')
+                        #form-group 
+                            label.main-label To
+                            input.form-control(name='to', type='date')
+                        br
+                        input.btn.btn-primary(type='submit', onclick="$('#exportStatusModal').modal('hide')", value='Export')
+                        button.btn.btn-danger(data-dismiss="modal") Cancel
+                    

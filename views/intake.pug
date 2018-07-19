@@ -1,0 +1,107 @@
+extends layout
+
+block content
+    h1= intake.requestName
+    h5 Submitted by #{intake.requestor}
+    hr
+    h4 Previous Versions:
+    each version, i in intake.prev
+        a(href="/intakes/"+intake._id+"/version/"+version.version) #{version.version}&nbsp;
+    a(href="/intakes/"+intake._id+"/version/0") Current
+    hr
+    table
+        thead
+        tbody
+            tr.intakeRow
+                td.intakeField
+                    span.main-label Status:
+                td
+                    intake.phase
+            tr.intakeRow
+                td.intakeField
+                    span.main-label Package:
+                td
+                    intake.package
+            tr.intakeRow
+                td.intakeField
+                    span.main-label Attachments:
+                td 
+                    each attachment, i in intake.attachments
+                        a(href='/'+attachment.filename) #{attachment.originalname} 
+                        br
+            tr.intakeRow
+                td.intakeField
+                    span.main-label Description:
+                td !{description}
+            tr.intakeRow
+                td.intakeField
+                    span.main-label Justification:
+                td !{intake.justification}
+            tr.intakeRow
+                td.intakeField
+                    span.main-label Target Date:
+                td
+                    =targetDate
+            tr.intakeRow
+                td.intakeField
+                    span.main-label Target System:
+                td
+                    if targetSystem.includes("USC")
+                        div USC
+                    if targetSystem.includes("LSCRM")
+                        div LSCRM
+            tr.intakeRow
+                td.intakeField
+                    span.main-label Approver and PAES Number:
+                td
+                    intake.paesNumber
+            tr.intakeRow
+                td.intakeField
+                    span.main-label Offer Configurator:
+                td
+                    intake.offerConfigurator
+            tr.intakeRow
+                td.intakeField
+                    span.main-label Offer Configurator Estimate:
+                td
+                    intake.offerConfiguratorEstimate
+            tr.intakeRow
+                td.intakeField
+                    span.main-label QA:
+                td
+                    intake.qa
+            tr
+                td.intakeField
+                    span.main-label QA Estimate:
+                td
+                    intake.qaEstimate
+    hr
+    if user
+        if user.type=='PM' || user.type=='SU' || user.type=='QA' || user.type=='OC'
+            a.btn.btn-primary(href='/intakes/edit/'+intake._id) Edit
+        if user.type=='PM' || user.type=='SU'
+            button.btn.btn-danger(data-toggle="modal", data-target="#deleteModal") Delete
+    br
+    br
+    label.main-label Comments:
+    br
+    br
+    each comment, i in intake.comments
+        div #{comment.posted.toDateString()} 
+        div #{comment.author.name}: !{comment.text}
+        hr
+    if user
+        form(method='POST', action='/intakes/comment/'+intake._id, enctype='multipart/form-data')
+            #form-group 
+                br
+                textarea.form-control(name='comment')
+            input.btn.btn-primary(type='submit', value='Post')
+            
+    div#deleteModal.modal.fade(role="dialog")
+        div.modal-dialog
+            div.modal-content
+                div.modal-body
+                    p Are you sure you want to delete this intake?
+                div.modal-footer
+                    a.btn.btn-primary.delete-intake(href='#', data-dismiss="modal", data-id=intake._id) Delete
+                    button.btn.btn-danger(data-dismiss="modal") Cancel

@@ -1,0 +1,134 @@
+extends layout
+
+block content
+    h1= title
+    br
+    p A Swimming-Lanes View of Current ADE Projects
+    hr
+    unless user
+        div.swim-pool
+            div.swim-lane Requirements
+                each intake, i in intakes
+                    if intake.phase=="requirements"
+                        div.kanban-card
+                            a(href='/intakes/'+intake._id)= intake.requestName
+            div.swim-lane Ready For Development
+                each intake, i in intakes
+                    if intake.phase=="readyfordevelopment"
+                        div.kanban-card
+                            a(href='/intakes/'+intake._id)= intake.requestName
+            div.swim-lane Development
+                each intake, i in intakes
+                    if intake.phase=="development"
+                        div.kanban-card
+                            a(href='/intakes/'+intake._id)= intake.requestName
+            div.swim-lane QA
+                each intake, i in intakes
+                    if intake.phase=="qa"
+                        div.kanban-card
+                            a(href='/intakes/'+intake._id)= intake.requestName
+            div.swim-lane In Approval
+                each intake, i in intakes
+                    if intake.phase=="inapproval"
+                        div.kanban-card
+                            a(href='/intakes/'+intake._id)= intake.requestName
+            div.swim-lane Complete
+                each intake, i in intakes
+                    if intake.phase=="complete"
+                        div.kanban-card
+                            a(href='/intakes/'+intake._id)= intake.requestName
+    else
+        div.swim-pool#kanban
+            if user.type=='PM' || user.type=='SU' || user.type=='QA'
+                div#requirements.swim-lane(ondrop="drop(event, this)", ondragover="allowDrop(event)") Requirements
+                    each intake, i in intakes
+                        if intake.phase=="requirements"
+                            div.kanban-card(draggable="true", ondragstart="drag(event)",id=intake.requestName)
+                                a(href='/intakes/'+intake._id)= intake.requestName                            
+            else
+                div#requirements.swim-lane Requirements
+                    each intake, i in intakes
+                        if intake.phase=="requirements"
+                            div.kanban-card(draggable="true", ondragstart="drag(event)",id=intake.requestName)
+                                a(href='/intakes/'+intake._id)= intake.requestName
+            if user.type=='PM' || user.type=='SU'
+                div#readyfordevelopment.swim-lane(ondrop="drop(event, this)", ondragover="allowDrop(event)") Ready For Development
+                    each intake, i in intakes
+                        if intake.phase=="readyfordevelopment"
+                            div.kanban-card(draggable="true", ondragstart="drag(event)",id=intake.requestName)
+                                a(href='/intakes/'+intake._id)= intake.requestName
+            else
+                div#readyfordevelopment.swim-lane Ready For Development
+                    each intake, i in intakes
+                        if intake.phase=="readyfordevelopment"
+                            div.kanban-card(draggable="true", ondragstart="drag(event)",id=intake.requestName)
+                                a(href='/intakes/'+intake._id)= intake.requestName
+            if user.type=='PM' || user.type=='SU' || user.type=='OC'
+                div#development.swim-lane(ondrop="drop(event, this)", ondragover="allowDrop(event)") Development
+                    each intake, i in intakes
+                        if intake.phase=="development"
+                            div.card.text-white.bg-info.mb-3(style="max-width: 18rem;",draggable="true", ondragstart="drag(event)",id=intake.requestName)
+                                .card-header= intake.requestName
+                                div.card-body
+                                    //h5.card-title(href='/intakes/'+intake._id)= intake.requestName
+                                    p.card-text Dev:&nbsp; #{intake.offerConfigurator}
+                                        br 
+                                        | QA:&nbsp; #{intake.qa}
+                                        br
+                                        | PM:&nbsp; #{intake.pm}
+                                        br
+                                        span= intake.current.targetDate
+            else 
+                div#development.swim-lane Development
+                    each intake, i in intakes
+                        if intake.phase=="development"
+                            div.kanban-card(draggable="true", ondragstart="drag(event)",id=intake.requestName)
+                                div.panel-heading 
+                                    a(href='/intakes/'+intake._id)= intake.requestName
+                                div.panel-body= intake.description
+            if user.type=='PM' || user.type=='SU' || user.type=='OC'
+                div#qa.swim-lane(ondrop="drop(event, this)", ondragover="allowDrop(event)") QA
+                    each intake, i in intakes
+                        if intake.phase=="qa"
+                            div.kanban-card(draggable="true", ondragstart="drag(event)",id=intake.requestName)
+                                a(href='/intakes/'+intake._id)= intake.requestName
+            else 
+                div#qa.swim-lane QA
+                    each intake, i in intakes
+                        if intake.phase=="qa"
+                            div.kanban-card(draggable="true", ondragstart="drag(event)",id=intake.requestName)
+                                a(href='/intakes/'+intake._id)= intake.requestName
+            if user.type=='PM' || user.type=='SU' || user.type=='QA'
+                div#inapproval.swim-lane(ondrop="drop(event, this)", ondragover="allowDrop(event)") In Approval
+                    each intake, i in intakes
+                        if intake.phase=="inapproval"
+                            div.kanban-card(draggable="true", ondragstart="drag(event)",id=intake.requestName)
+                                a(href='/intakes/'+intake._id)= intake.requestName
+            else 
+                div#inapproval.swim-lane In Approval
+                    each intake, i in intakes
+                        if intake.phase=="inapproval"
+                            div.kanban-card(draggable="true", ondragstart="drag(event)",id=intake.requestName)
+                                a(href='/intakes/'+intake._id)= intake.requestName
+            if user.type=='PM' || user.type=='SU'
+                div#complete.swim-lane(ondrop="drop(event, this)", ondragover="allowDrop(event)") Complete
+                    each intake, i in intakes
+                        if intake.phase=="complete"
+                            div.kanban-card(draggable="true", ondragstart="drag(event)",id=intake.requestName)
+                                a(href='/intakes/'+intake._id)= intake.requestName
+            else
+                div#complete.swim-lane Complete
+                    each intake, i in intakes
+                        if intake.phase=="complete"
+                            div.kanban-card(draggable="true", ondragstart="drag(event)",id=intake.requestName)
+                                a(href='/intakes/'+intake._id)= intake.requestName
+        button.btn.btn-primary(data-toggle="modal", data-target="#kanbanModal") Submit Changes
+   
+    div#kanbanModal.modal.fade(role="dialog")
+        div.modal-dialog
+            div.modal-content
+                div.modal-body
+                    p Are you sure you want to submit these changes?
+                div.modal-footer
+                    button.btn.btn-primary(onclick="submitKanban()", data-dismiss="modal") Submit 
+                    button.btn.btn-danger(data-dismiss="modal") Cancel

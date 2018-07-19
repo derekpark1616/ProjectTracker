@@ -1,0 +1,58 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/bower_components/bootstrap/dist/css/bootstrap.css')
+    link(href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css", rel="stylesheet", type="text/css")
+    link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.25.0/codemirror.min.css")
+    link(href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.8.1/css/froala_editor.pkgd.min.css", rel="stylesheet", type="text/css")
+    link(href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.8.1/css/froala_style.min.css", rel="stylesheet", type="text/css")
+  body
+    nav.navbar.navbar-expand-md.navbar-dark.bg-dark
+      a.navbar-brand(href='/') Home
+      button.navbar-toggler(type='button', data-target='#navbarsExampleDefault', aria-controls='navbarsExampleDefault', aria-expanded='false')
+        span.navbar-toggler-icon
+      #navbarsExampleDefault.collapse.navbar-collapse
+        ul.navbar-nav.mr-auto
+          li.nav-item
+            a.nav-link(href='/intakes')
+              | Requests
+              span.sr-only (current)
+          if user
+            li.nav-item
+              a.nav-link(href='/intakes/create') Create Intake
+          li.nav-item.dropdown
+            a#dropdown01.nav-link.dropdown-toggle(href='#', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false') Dropdown
+            .dropdown-menu(aria-labelledby='dropdown01')
+              a.dropdown-item(href='/intakes/kanban') Kanban
+              a.dropdown-item(href='/users') Users
+              a.dropdown-item(href='/reports') Reports
+        ul.navbar-nav.navbar-right
+          if user
+            li.nav-item 
+              p.nav-link= user.name
+            li.nav-item 
+              a.nav-link(href='/users/logout') Logout
+          else
+            li.nav-item
+              a.nav-link(href='/users/register') Register
+            li.nav-item
+              a.nav-link(href='/users/login') Login
+        form.form-inline.my-2.my-lg-0
+          input.form-control.mr-sm-2(type='text', placeholder='Search', aria-label='Search')
+          button.btn.btn-outline-success.my-2.my-sm-0(type='submit') Search
+
+    .container
+      != messages('message', locals)
+      if errors
+        each error, i in errors
+          div(class="alert alert-danger") #{error.msg}
+      block content
+    script(src='/bower_components/jquery/dist/jquery.js')
+    script(src='/bower_components/tablesorter/dist/js/jquery.tablesorter.min.js')
+    script(src='/bower_components/bootstrap/dist/js/bootstrap.js')
+    script(type="text/javascript", src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.25.0/codemirror.min.js")
+    script(type="text/javascript", src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.25.0/mode/xml/xml.min.js")
+    script(type="text/javascript", src="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/2.8.1/js/froala_editor.pkgd.min.js")
+    script(src='/javascripts/main.js')

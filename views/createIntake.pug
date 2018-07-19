@@ -1,0 +1,51 @@
+extends layout
+
+block content
+  h1= title
+  hr
+  form(method='POST', action='/intakes/create', enctype='multipart/form-data')
+    #form-group 
+      label.main-label Request Name
+      input.form-control(name='requestName', type='text')
+    #form-group 
+      label.main-label Attachments
+      br
+      label.flavor-text Please provide any attachments that will assist in this request (Max 10)
+      input.form-control(name='attachments', type='file', multiple)
+    #form-group 
+      label.main-label Target Date
+      br
+      span.flavor-text Typical LOE is two weeks from request date
+      input.form-control(name='targetDate', type='date')
+    #form-group 
+      label.main-label Detailed Description
+      br
+      label.flavor-text Please provide as much detail as possible. If the request includes an exist offer/promo, please specify ID
+      textarea.form-control(name='description')
+    #form-group 
+      label.main-label Business Justification
+      br
+      label.flavor-text Requests will be prioritized by this information and date of request. Include ROI. Churn and any other financial benefits
+      textarea.form-control(name='justification')
+    #form-group 
+      label.main-label Requestor
+      br
+      label.flavor-text If you are requesting this for someone other than yourself, please enter their ATTUID
+      input.form-control(name='requestor', type='text')
+    #form-group 
+      label.main-label Approver and PAES Number if Applicable
+      br
+      label.flavor-text Request will not be processed if a PAES is required until approval is received
+      input.form-control(name='paesNumber', type='text')
+    #form-group
+      label.main-label Target System
+      br
+      input(name='targetSystem', type='checkbox', value='USC')
+      label &nbsp;&nbsp;USC
+      br
+      input(name='targetSystem', type='checkbox', value='LSCRM')
+      label &nbsp;&nbsp;LSCRM
+      br
+    br
+    input.btn.btn-primary(type='submit', value='Submit')
+    a.btn.btn-danger(href='/') Cancel
