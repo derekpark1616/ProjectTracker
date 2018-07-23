@@ -1,0 +1,29 @@
+extends layout
+
+block content
+    h1 #{title}
+    br
+    p Click on any column headers to sort requests by that field
+    hr
+    table.table-hover.table-striped#request-table
+        thead
+            tr
+                th Request Name
+                th Description
+                th Business Justification
+                th Request Date
+                th Target Date
+                th Requested By
+        tbody
+            each intake, i in intakes
+                tr(id=intake._id)
+                    td
+                        a(href="/intakes/completed/"+intake._id+"/version/0", style='color:gray')= intake.requestName
+                    td !{intake.current.description}
+                    td !{intake.justification} 
+                    td= intake.requestDate.toDateString()
+                    if intake.current.targetDate
+                        td= intake.current.targetDate
+                    else
+                        td 
+                    td= intake.requestor

@@ -455,15 +455,15 @@ function calculateTimes(intake, dataset) {
         requestName: intake.requestName,
         package: 'stub',
         requirementsHours: requirementsTime/3600000,
-        requirementsPercent: requirementsTime/totalTime,
+        requirementsPercent: requirementsTime/totalTime*100,
         readyForDevHours: readyfordevelopmentTime/3600000,
-        readyForDevPercent: readyfordevelopmentTime/totalTime,
+        readyForDevPercent: readyfordevelopmentTime/totalTime*100,
         developmentHours: developmentTime/3600000,
-        developmentPercent: developmentTime/totalTime,
+        developmentPercent: developmentTime/totalTime*100,
         qaHours: qaTime/3600000,
-        qaPercent: qaTime/totalTime,
+        qaPercent: qaTime/totalTime*100,
         approvalHours: approvalTime/3600000,
-        approvalPercent: approvalTime/totalTime
+        approvalPercent: approvalTime/totalTime*100
     });
 }
 

@@ -5,8 +5,11 @@ block content
     br
     hr
     each person, i in people
-        if user.type=="SU"
-            a(href="/users/edit/"+person._id)= person.name
+        if user
+            if user.type=="SU"
+                a(href="/users/edit/"+person._id)= person.name
+            else 
+                p= person.name
         else 
             p= person.name
         p User Type: #{person.type}

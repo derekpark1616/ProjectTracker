@@ -15,19 +15,18 @@ html
         span.navbar-toggler-icon
       #navbarsExampleDefault.collapse.navbar-collapse
         ul.navbar-nav.mr-auto
-          li.nav-item
-            a.nav-link(href='/intakes')
-              | Requests
-              span.sr-only (current)
-          if user
-            li.nav-item
-              a.nav-link(href='/intakes/create') Create Intake
           li.nav-item.dropdown
-            a#dropdown01.nav-link.dropdown-toggle(href='#', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false') Dropdown
+            a#dropdown01.nav-link.dropdown-toggle(href='#', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false') Requests
             .dropdown-menu(aria-labelledby='dropdown01')
+              a.dropdown-item(href='/intakes') View All Requests
+              a.dropdown-item(href='/intakes/completed') View Completed Requests
               a.dropdown-item(href='/intakes/kanban') Kanban
-              a.dropdown-item(href='/users') Users
-              a.dropdown-item(href='/reports') Reports
+              if user
+                a.dropdown-item(href='/intakes/create') Create
+          li.nav-item
+            a.nav-link(href='/users') Users
+          li.nav-item
+            a.nav-link(href='/reports') Reports
         ul.navbar-nav.navbar-right
           if user
             li.nav-item 

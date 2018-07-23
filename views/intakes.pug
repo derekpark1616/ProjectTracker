@@ -1,12 +1,12 @@
 extends layout
 
 block content
-    h1 Requests
+    h1 #{title}
     br
     p Click on any column headers to sort requests by that field
     hr
     if user
-        table.table-dark.table-hover.table-striped#request-table
+        table.table-hover.table-striped#request-table
             thead
                 tr
                     th Request Name
@@ -20,7 +20,7 @@ block content
                 each intake, i in intakes
                     tr(id=intake._id)
                         td
-                            a(href="/intakes/"+intake._id+"/version/0", style='color:white')= intake.requestName
+                            a(href="/intakes/"+intake._id+"/version/0", style='color:gray')= intake.requestName
                         td !{intake.current.description}
                         td !{intake.justification} 
                         if user.type=="PM" || user.type=="SU"
@@ -39,7 +39,7 @@ block content
             button.btn.btn-primary(onclick="submitPriorities()") Submit
             a.btn.btn-danger(href='/intakes') Cancel
     else
-        table.table-dark.table-hover.table-striped#request-table
+        table.table-hover.table-striped#request-table
             thead
                 tr
                     th Request Name
@@ -53,7 +53,7 @@ block content
                 each intake, i in intakes
                     tr
                         td
-                            a(href="/intakes/"+intake._id+"/version/0")= intake.requestName
+                            a(href="/intakes/"+intake._id+"/version/0", style='color:gray')= intake.requestName
                         td !{intake.current.description}
                         td !{intake.justification} 
                         td= intake.priority

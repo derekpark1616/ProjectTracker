@@ -31,6 +31,20 @@ router.get('/', function(req,res) {
     });
 });
 
+//get the completed intakes
+router.get('/completed', function(req,res) {
+    Completed.find({}, function(err, intakes) {
+        if(err){
+            console.log(err);
+        } else {
+            res.render('completed', {
+                title: 'Completed Intakes',
+                intakes: intakes
+            });
+        }
+    });
+});
+
 //get view for creating intake
 router.get('/create', ensureAuthenticated, function(req, res, next) {
   res.render('createIntake', { title: 'Submit an Intake' });
@@ -245,6 +259,36 @@ router.post('/edit/:id', upload.array('attachments', 10), ensureAuthenticated, f
 //click on a single intake
 router.get('/:id/version/:v', function(req, res) {
     Intake.findById(req.params.id, function(err, intake) {
+        if(req.params.v==0) {
+            res.render('intake', {
+                intake: intake,
+                description: intake.current.description,
+                targetDate: intake.current.targetDate,
+                targetSystem: intake.current.targetSystem,
+                v: 'current',
+                updated: intake.current.updated 
+            });
+        }      
+        else {
+            var versionIndex = req.params.v-1;
+            console.log(versionIndex);
+            console.log(intake.prev);
+            res.render('intake', {
+                intake: intake,
+                description: intake.prev[versionIndex].description,
+                targetDate: intake.prev[versionIndex].targetDate,
+                targetSystem: intake.prev[versionIndex].targetSystem,
+                v: req.params.v,
+                updated: intake.prev[versionIndex].updated 
+            });
+        }
+    });
+});
+
+//click on a single completed intake
+router.get('/completed/:id/version/:v', function(req, res) {
+    console.log('searching completed ' + req.params.id);
+    Completed.findById(req.params.id, function(err, intake) {
         if(req.params.v==0) {
             res.render('intake', {
                 intake: intake,

@@ -36,15 +36,9 @@
   padding: 8px;
 }
 
-/*#request-table tr:nth-child(even) {
-  background-color: #f2f2f2;
-}*/
-
 #request-table th {
   padding: 0px 12px;
   text-align: left;
-  /*background-color: rgb(29, 132, 250);
-  color: white;*/
 }
 
 .swim-pool {
@@ -61,17 +55,10 @@
 }
 
 .kanban-card {
-  height: 150px; 
-  width: 175px;
-  border-style: outset;
-  border-radius: 8px;
-  padding: 10px;
-  margin: 10px;
-  white-space: normal;
-  color: #31708f;
-  background-color: #d9edf7;
-  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-  overflow: auto;
+  width: 200px;
+  height: 200px;
+  overflow: hidden;
+  margin: 5px;
 }
 
 .intakeField {
