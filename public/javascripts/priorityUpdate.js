@@ -23,6 +23,7 @@ function submitPriorities() {
         if(response.ok) {
             //clear the updates
             priorityUpdates = {};
+            window.location.href='/intakes'
             return response.blob();
         }         
         throw new Error('Network response was not ok. Please try again');

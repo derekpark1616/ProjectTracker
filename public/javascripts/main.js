@@ -7,7 +7,7 @@ $(function(){
 });
 
 //replace normal text areas with wysiwyg editor
-$(function(){ 
+/*$(function(){ 
     $('textarea').froalaEditor({
         quickInsertButtons: [],
         toolbarButtons: ['bold', 'italic', 'underline', 
@@ -15,7 +15,7 @@ $(function(){
         'paragraphStyle', '|', 'paragraphFormat', 'align', 'formatOL', 'formatUL', 'outdent', 
         'indent', 'quote', 'spellChecker', 'help', '|', 'undo', 'redo']
     });
-});
+});*/
 
 //following three functions override default drag and drop functionality
 function allowDrop(ev) {

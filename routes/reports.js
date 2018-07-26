@@ -227,10 +227,12 @@ router.get('/in-progress', function(req, res) {
                         phase: intake.phase,
                         requestDate: intake.requestDate,
                         targetDate: intake.current.targetDate,
-                        package: 'stub',
-                        description: intake.current.description,
+                        package: intake.package,
+                        description: intake.current.description.replace(/<(?:.|\n)*?>/gm, '')
+                        .replace(/&nbsp;/g, ' ').replace(/&ldquo;|&rdquo;/g, '"'),
                         targetSystem: intake.current.targetSystem,
-                        justification: intake.justification,
+                        justification: intake.justification.replace(/<(?:.|\n)*?>/gm, '')
+                        .replace(/&nbsp;/g, ' ').replace(/&ldquo;|&rdquo;/g, '"'),
                         requestor: intake.requestor,
                         paesNumber: intake.paesNumber,
                         offerConfigurator: intake.offerConfigurator,
@@ -268,10 +270,13 @@ router.get('/completed', function(req, res) {
                         phase: intake.phase,
                         requestDate: intake.requestDate,
                         targetDate: intake.current.targetDate,
-                        package: 'stub',
-                        description: intake.current.description,
+                        package: intake.package,
+                        //regex removes html formatting from string
+                        description: intake.current.description.replace(/<(?:.|\n)*?>/gm, '')
+                        .replace(/&nbsp;/g, ' ').replace(/&ldquo;|&rdquo;/g, '"'),
                         targetSystem: intake.current.targetSystem,
-                        justification: intake.justification,
+                        justification: intake.justification.replace(/<(?:.|\n)*?>/gm, '')
+                        .replace(/&nbsp;/g, ' ').replace(/&ldquo;|&rdquo;/g, '"'),
                         requestor: intake.requestor,
                         paesNumber: intake.paesNumber,
                         offerConfigurator: intake.offerConfigurator,
@@ -297,9 +302,13 @@ router.get('/completed', function(req, res) {
 router.post('/versions', function(req, res) {
     var dataset = [];
     //error validation for from and to dates
-    req.checkBody('from', 'A From Date is required').notEmpty();
-    req.checkBody('to', 'A To Date is required').notEmpty();
+    req.checkBody('from', 'A \'From Date\' is required').notEmpty();
+    req.checkBody('to', 'A \'To Date\' is required').notEmpty();
 
+    if(req.body.to && req.body.from > req.body.to) {
+        req.flash('danger', '\'From Date\' should be before a \'To Date\'');
+        return res.redirect('/reports');
+    } 
     let errors = req.validationErrors();
     if(errors) {
         res.render('reports', {
@@ -324,10 +333,12 @@ router.post('/versions', function(req, res) {
                             phase: intake.phase,
                             requestDate: intake.requestDate,
                             targetDate: intake.current.targetDate,
-                            package: 'stub',
-                            description: intake.current.description,
+                            package: intake.package,
+                            description: intake.current.description.replace(/<(?:.|\n)*?>/gm, '')
+                            .replace(/&nbsp;/g, ' ').replace(/&ldquo;|&rdquo;/g, '"'),
                             targetSystem: intake.current.targetSystem,
-                            justification: intake.justification,
+                            justification: intake.justification.replace(/<(?:.|\n)*?>/gm, '')
+                            .replace(/&nbsp;/g, ' ').replace(/&ldquo;|&rdquo;/g, '"'),
                             requestor: intake.requestor,
                             paesNumber: intake.paesNumber,
                             offerConfigurator: intake.offerConfigurator,
@@ -343,10 +354,12 @@ router.post('/versions', function(req, res) {
                                 phase: intake.phase,
                                 requestDate: intake.requestDate,
                                 targetDate: previousVersion.targetDate,
-                                package: 'stub',
-                                description: previousVersion.description,
+                                package: intake.package,
+                                description: previousVersion.description.replace(/<(?:.|\n)*?>/gm, '')
+                                .replace(/&nbsp;/g, ' ').replace(/&ldquo;|&rdquo;/g, '"'),
                                 targetSystem: previousVersion.targetSystem,
-                                justification: intake.justification,
+                                justification: intake.justification.replace(/<(?:.|\n)*?>/gm, '')
+                                .replace(/&nbsp;/g, ' ').replace(/&ldquo;|&rdquo;/g, '"'),
                                 requestor: intake.requestor,
                                 paesNumber: intake.paesNumber,
                                 offerConfigurator: intake.offerConfigurator,
@@ -373,8 +386,13 @@ router.post('/versions', function(req, res) {
 router.post('/status', function(req, res) {
     var dataset = [];
     //error validation for from and to dates
-    req.checkBody('from', 'A From Date is required').notEmpty();
-    req.checkBody('to', 'A To Date is required').notEmpty();
+    req.checkBody('from', 'A \'From Date\' is required').notEmpty();
+    req.checkBody('to', 'A \'To Date\' is required').notEmpty();
+
+    if(req.body.to && req.body.from > req.body.to) {
+        req.flash('danger', '\'From Date\' should be before a \'To Date\'');
+        return res.redirect('/reports');
+    } 
 
     let errors = req.validationErrors();
     if(errors) {
@@ -453,7 +471,7 @@ function calculateTimes(intake, dataset) {
     totalTime = requirementsTime + readyfordevelopmentTime + developmentTime + qaTime + approvalTime;
     dataset.push({
         requestName: intake.requestName,
-        package: 'stub',
+        package: intake.package,
         requirementsHours: requirementsTime/3600000,
         requirementsPercent: requirementsTime/totalTime*100,
         readyForDevHours: readyfordevelopmentTime/3600000,

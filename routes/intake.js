@@ -17,9 +17,9 @@ var router = express.Router();
 var Intake = require('../models/intake');
 var Completed = require('../models/completed');
 
-/* GET list of intakes */ 
+/* GET list of intakes sorted by priority*/ 
 router.get('/', function(req,res) {
-    Intake.find({}, function(err, intakes) {
+    Intake.find({}, null, {sort: { priority: 1 } }, function(err, intakes) {
         if(err){
             console.log(err);
         } else {
@@ -81,8 +81,19 @@ router.post('/create', upload.array('attachments', 10), function(req, res, next)
         intake.phase = "requirements";
         intake.current.version = 1;
         intake.requirements.entered.push(new Date());
+        intake.priority = 0;
+        intake.save(function(err) {
+            if(err) {
+                console.log(err);
+                return;
+            } else {
+                //sendEmail(intake.requestName);
+                req.flash('success', 'Your Intake Has Been Successfully Submitted');
+                res.redirect('/intakes');
+            }
+        });
         //Set default priority to be last
-        Intake.count({}, function(err, count) {
+        /*Intake.count({}, function(err, count) {
             if(err)
                 console.log(err);
             else {
@@ -98,7 +109,7 @@ router.post('/create', upload.array('attachments', 10), function(req, res, next)
                     }
                 });
             }
-        });       
+        });*/       
     }
 });
 
@@ -201,7 +212,7 @@ router.post('/edit/:id', upload.array('attachments', 10), ensureAuthenticated, f
             //updating all fields with new info
             var diffDescript = false;
             intake.requestName = req.body.requestName;
-
+            console.log(req.body.description);
             //logic to only change description and justification for PMs and SUs
             if(req.user.type=='PM' || req.user.type=='SU') {
                 intake.justification = req.body.justification;
@@ -230,6 +241,8 @@ router.post('/edit/:id', upload.array('attachments', 10), ensureAuthenticated, f
                 var currVersion = intake.current.version;
                 var oldVersion = {};
                 oldVersion.targetDate = intake.current.targetDate;
+                console.log("Updated description:");
+                console.log(req.body.description);
                 oldVersion.description = intake.current.description;
                 oldVersion.targetSystem = intake.current.targetSystem;
                 oldVersion.version = currVersion;
