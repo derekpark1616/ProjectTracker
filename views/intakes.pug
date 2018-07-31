@@ -27,7 +27,8 @@ block content
                             td.priority(contenteditable='true')= intake.priority
                         else
                             td= intake.priority
-                        td= intake.requestDate.toDateString()
+                        td= intake.requestDate.toLocaleDateString("en-US")
+                        //td= intake.requestDate
                         if intake.current.targetDate
                             td= intake.current.targetDate
                         else

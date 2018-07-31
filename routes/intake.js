@@ -33,7 +33,6 @@ router.get('/', function(req,res) {
 
 //get the completed intakes
 router.get('/completed/:page', function(req,res) {
-    //Completed.find({}, {page: req.body.page, limit: 10 }, function(err, intakes) {
     var perPage = 10;
     var page = req.params.page || 1;
     Completed.find({}).skip((perPage*page) - perPage).limit(perPage).exec(function(err, intakes) {

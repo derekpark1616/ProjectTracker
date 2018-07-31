@@ -10,7 +10,7 @@ block content
             div.swim-lane Requirements
                 each intake, i in intakes
                     if intake.phase=="requirements"
-                        div.kanban-card.card.text-white.bg-info.mb-3(id=intake.requestName)
+                        div.kanban-card.card.text-white.att.mb-3(id=intake.requestName)
                                 .card-header
                                  a(href='/intakes/'+intake._id+'/version/0', style='color:white')= intake.requestName
                                 div.card-body
@@ -24,7 +24,7 @@ block content
             div.swim-lane Ready For Development
                 each intake, i in intakes
                     if intake.phase=="readyfordevelopment"
-                        div.kanban-card.card.text-white.bg-info.mb-3(id=intake.requestName)
+                        div.kanban-card.card.text-white.att.mb-3(id=intake.requestName)
                                 .card-header
                                  a(href='/intakes/'+intake._id+'/version/0', style='color:white')= intake.requestName
                                 div.card-body
@@ -38,7 +38,7 @@ block content
             div.swim-lane Development
                 each intake, i in intakes
                     if intake.phase=="development"
-                        div.kanban-card.card.text-white.bg-info.mb-3(id=intake.requestName)
+                        div.kanban-card.card.text-white.att.mb-3(id=intake.requestName)
                                 .card-header
                                  a(href='/intakes/'+intake._id+'/version/0', style='color:white')= intake.requestName
                                 div.card-body
@@ -52,7 +52,7 @@ block content
             div.swim-lane QA
                 each intake, i in intakes
                     if intake.phase=="qa"
-                        div.kanban-card.card.text-white.bg-info.mb-3(id=intake.requestName)
+                        div.kanban-card.card.text-white.att.mb-3(id=intake.requestName)
                                 .card-header
                                  a(href='/intakes/'+intake._id+'/version/0', style='color:white')= intake.requestName
                                 div.card-body
@@ -66,7 +66,7 @@ block content
             div.swim-lane In Approval
                 each intake, i in intakes
                     if intake.phase=="inapproval"
-                        div.kanban-card.card.text-white.bg-info.mb-3(id=intake.requestName)
+                        div.kanban-card.card.text-white.att.mb-3(id=intake.requestName)
                                 .card-header
                                  a(href='/intakes/'+intake._id+'/version/0', style='color:white')= intake.requestName
                                 div.card-body
@@ -84,7 +84,7 @@ block content
                 div#requirements.swim-lane(ondrop="drop(event, this)", ondragover="allowDrop(event)") Requirements
                     each intake, i in intakes
                         if intake.phase=="requirements"
-                            div.kanban-card.card.text-white.bg-info.mb-3(draggable="true", ondragstart="drag(event)",id=intake.requestName)
+                            div.kanban-card.card.text-white.att.mb-3(draggable="true", ondragstart="drag(event)",id=intake.requestName)
                                 .card-header
                                  a(href='/intakes/'+intake._id+'/version/0', style='color:white')= intake.requestName
                                 div.card-body
@@ -99,7 +99,7 @@ block content
                 div#requirements.swim-lane Requirements
                     each intake, i in intakes
                         if intake.phase=="requirements"
-                            div.kanban-card.card.text-white.bg-info.mb-3(id=intake.requestName)
+                            div.kanban-card.card.text-white.att.mb-3(id=intake.requestName)
                                 .card-header
                                  a(href='/intakes/'+intake._id+'/version/0', style='color:white')= intake.requestName
                                 div.card-body
@@ -114,7 +114,7 @@ block content
                 div#readyfordevelopment.swim-lane(ondrop="drop(event, this)", ondragover="allowDrop(event)") Ready For Development
                     each intake, i in intakes
                         if intake.phase=="readyfordevelopment"
-                            div.kanban-card.card.text-white.bg-info.mb-3(draggable="true", ondragstart="drag(event)",id=intake.requestName)
+                            div.kanban-card.card.text-white.att.mb-3(draggable="true", ondragstart="drag(event)",id=intake.requestName)
                                 .card-header
                                  a(href='/intakes/'+intake._id+'/version/0', style='color:white')= intake.requestName
                                 div.card-body
@@ -129,7 +129,7 @@ block content
                 div#readyfordevelopment.swim-lane Ready For Development
                     each intake, i in intakes
                         if intake.phase=="readyfordevelopment"
-                            div.kanban-card.card.text-white.bg-info.mb-3(id=intake.requestName)
+                            div.kanban-card.card.text-white.att.mb-3(id=intake.requestName)
                                 .card-header
                                  a(href='/intakes/'+intake._id+'/version/0', style='color:white')= intake.requestName
                                 div.card-body
@@ -144,7 +144,7 @@ block content
                 div#development.swim-lane(ondrop="drop(event, this)", ondragover="allowDrop(event)") Development
                     each intake, i in intakes
                         if intake.phase=="development"
-                            div.kanban-card.card.text-white.bg-info.mb-3(draggable="true", ondragstart="drag(event)",id=intake.requestName)
+                            div.kanban-card.card.text-white.att.mb-3(draggable="true", ondragstart="drag(event)",id=intake.requestName)
                                 .card-header
                                  a(href='/intakes/'+intake._id+'/version/0', style='color:white')= intake.requestName
                                 div.card-body
@@ -159,7 +159,7 @@ block content
                 div#development.swim-lane Development
                     each intake, i in intakes
                         if intake.phase=="development"
-                            div.kanban-card.card.text-white.bg-info.mb-3(draggable="true", ondragstart="drag(event)",id=intake.requestName)
+                            div.kanban-card.card.text-white.att.mb-3(draggable="true", ondragstart="drag(event)",id=intake.requestName)
                                 .card-header
                                  a(href='/intakes/'+intake._id+'/version/0', style='color:white')= intake.requestName
                                 div.card-body
@@ -174,7 +174,7 @@ block content
                 div#qa.swim-lane(ondrop="drop(event, this)", ondragover="allowDrop(event)") QA
                     each intake, i in intakes
                         if intake.phase=="qa"
-                            div.kanban-card.card.text-white.bg-info.mb-3(draggable="true", ondragstart="drag(event)",id=intake.requestName)
+                            div.kanban-card.card.text-white.att.mb-3(draggable="true", ondragstart="drag(event)",id=intake.requestName)
                                 .card-header
                                  a(href='/intakes/'+intake._id+'/version/0', style='color:white')= intake.requestName
                                 div.card-body
@@ -189,7 +189,7 @@ block content
                 div#qa.swim-lane QA
                     each intake, i in intakes
                         if intake.phase=="qa"
-                            div.kanban-card.card.text-white.bg-info.mb-3(draggable="true", ondragstart="drag(event)",id=intake.requestName)
+                            div.kanban-card.card.text-white.att.mb-3(draggable="true", ondragstart="drag(event)",id=intake.requestName)
                                 .card-header
                                  a(href='/intakes/'+intake._id+'/version/0', style='color:white')= intake.requestName
                                 div.card-body
@@ -204,7 +204,7 @@ block content
                 div#inapproval.swim-lane(ondrop="drop(event, this)", ondragover="allowDrop(event)") In Approval
                     each intake, i in intakes
                         if intake.phase=="inapproval"
-                            div.kanban-card.card.text-white.bg-info.mb-3(draggable="true", ondragstart="drag(event)",id=intake.requestName)
+                            div.kanban-card.card.text-white.att.mb-3(draggable="true", ondragstart="drag(event)",id=intake.requestName)
                                 .card-header
                                  a(href='/intakes/'+intake._id+'/version/0', style='color:white')= intake.requestName
                                 div.card-body
@@ -219,7 +219,7 @@ block content
                 div#inapproval.swim-lane In Approval
                     each intake, i in intakes
                         if intake.phase=="inapproval"
-                            div.kanban-card.card.text-white.bg-info.mb-3(draggable="true", ondragstart="drag(event)",id=intake.requestName)
+                            div.kanban-card.card.text-white.att.mb-3(draggable="true", ondragstart="drag(event)",id=intake.requestName)
                                 .card-header
                                  a(href='/intakes/'+intake._id+'/version/0', style='color:white')= intake.requestName
                                 div.card-body

@@ -27,8 +27,34 @@ block content
                     else
                         td 
                     td= intake.requestor
+    br
     if pages > 1
         ul.pagination.text-center
-            - for (var i = 1; i <= pages; i++)
+            if(current==1)
+                li.disabled
+                    a 1&nbsp;
+            else
                 li
-                    a(href="/intakes/completed/"+i)= i
+                    a(href="/intakes/completed/1") 1&nbsp;
+            - var i = (current > 3 ? current - 2 : 1)
+            if i!== 1
+                li.disabled
+                    a ...&npsp;
+            - for (; i <= current+2 && i <= pages; i++)
+                if i==1 || i==pages
+                    //do nothing
+                else if i==current
+                    li.active
+                        a #{i}&nbsp;
+                else
+                    li
+                        a(href="/intakes/completed"+i) #{i}&nbsp;
+                if i==current+2 && i < pages
+                    li.disabled
+                        a ...&nbsp;
+            if(current==pages)
+                li.disabled
+                    a #{pages}&nbsp;
+            else
+                li
+                    a(href="/intakes/completed/"+pages) #{pages}&nbsp;
