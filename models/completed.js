@@ -1,4 +1,5 @@
 let mongoose = require('mongoose');
+let mongoosePaginate = require('mongoose-paginate');
 
 // Completed Schema
 let completedSchema = mongoose.Schema({
@@ -98,4 +99,5 @@ let completedSchema = mongoose.Schema({
 }, 
 {versionKey: false});
 
+completedSchema.plugin(mongoosePaginate);
 let Completed = module.exports = mongoose.model('Completed', completedSchema);

@@ -77,10 +77,15 @@ block content
                     =intake.qaEstimate
     hr
     if user
-        if user.type=='PM' || user.type=='SU' || user.type=='QA' || user.type=='OC'
-            a.btn.btn-primary(href='/intakes/edit/'+intake._id) Edit
-        if user.type=='PM' || user.type=='SU'
-            button.btn.btn-danger(data-toggle="modal", data-target="#deleteModal") Delete
+        if intake.phase!='complete'
+            if user.type=='PM' || user.type=='SU' || user.type=='QA' || user.type=='OC'
+                a.btn.btn-primary(href='/intakes/edit/'+intake._id+'/0') Edit
+            if user.type=='PM' || user.type=='SU'
+                button.btn.btn-danger(data-toggle="modal", data-target="#deleteModal") Delete
+        else
+            if user.type=='PM' || user.type=='SU' || user.type=='QA' || user.type=='OC'
+                a.btn.btn-primary(href='/intakes/edit/'+intake._id+'/1') Edit
+        
     br
     br
     label.main-label Comments:
@@ -91,11 +96,18 @@ block content
         div #{comment.author.name}: !{comment.text}
         hr
     if user
-        form(method='POST', action='/intakes/comment/'+intake._id, enctype='multipart/form-data')
-            #form-group 
-                br
-                textarea.form-control(name='comment')
-            input.btn.btn-primary(type='submit', value='Post')
+        if intake.phase!='complete'
+            form(method='POST', action='/intakes/comment/'+intake._id+'/0', enctype='multipart/form-data')
+                #form-group 
+                    br
+                    textarea.form-control(name='comment')
+                input.btn.btn-primary(type='submit', value='Post')
+        else
+            form(method='POST', action='/intakes/comment/'+intake._id+'/1', enctype='multipart/form-data')
+                #form-group 
+                    br
+                    textarea.form-control(name='comment')
+                input.btn.btn-primary(type='submit', value='Post')
             
     div#deleteModal.modal.fade(role="dialog")
         div.modal-dialog

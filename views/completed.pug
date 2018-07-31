@@ -27,3 +27,8 @@ block content
                     else
                         td 
                     td= intake.requestor
+    if pages > 1
+        ul.pagination.text-center
+            - for (var i = 1; i <= pages; i++)
+                li
+                    a(href="/intakes/completed/"+i)= i

@@ -13,7 +13,7 @@ const inProgressHeading = [
 
 //headings for versions excel report
 const versionsHeading = [
-    ['Request Name', 'Version', 'Status', 'Create Date', 'Target Date', 'Package #', 'Detailed Description',
+    ['Request Name', 'Version', 'Updated', 'Status', 'Create Date', 'Target Date', 'Package #', 'Detailed Description',
 'Target System', 'Business Justification', 'Requestor', 'Approver & PAES', 'Offer Configurator', 
 'Offer Configurator Estimate', 'QA', 'QA Estimate']
 ];
@@ -95,6 +95,10 @@ const versionsSpec = {
     },
     version: {
         displayName: 'Version',
+        width:100
+    },
+    updated: {
+        displayName: 'Updated',
         width:100
     },
     phase: {
@@ -330,6 +334,7 @@ router.post('/versions', function(req, res) {
                         dataset.push({
                             requestName: intake.requestName,
                             version: intake.current.version,
+                            updated: intake.current.updated,
                             phase: intake.phase,
                             requestDate: intake.requestDate,
                             targetDate: intake.current.targetDate,
@@ -351,6 +356,7 @@ router.post('/versions', function(req, res) {
                             dataset.push({
                                 requestName: intake.requestName,
                                 version: previousVersion.version,
+                                updated: previousVersion.updated,
                                 phase: intake.phase,
                                 requestDate: intake.requestDate,
                                 targetDate: previousVersion.targetDate,

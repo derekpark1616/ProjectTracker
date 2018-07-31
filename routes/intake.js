@@ -32,28 +32,33 @@ router.get('/', function(req,res) {
 });
 
 //get the completed intakes
-router.get('/completed', function(req,res) {
-    Completed.find({}, function(err, intakes) {
-        if(err){
-            console.log(err);
-        } else {
-            res.render('completed', {
-                title: 'Completed Intakes',
-                intakes: intakes
-            });
-        }
+router.get('/completed/:page', function(req,res) {
+    //Completed.find({}, {page: req.body.page, limit: 10 }, function(err, intakes) {
+    var perPage = 10;
+    var page = req.params.page || 1;
+    Completed.find({}).skip((perPage*page) - perPage).limit(perPage).exec(function(err, intakes) {
+        Completed.count().exec(function(err, count) {
+            if(err){
+                console.log(err);
+            } else {
+                res.render('completed', {
+                    title: 'Completed Intakes',
+                    intakes: intakes,
+                    current: page,
+                    pages: Math.ceil(count/perPage)
+                });
+            }
+        })     
     });
 });
 
 //get view for creating intake
 router.get('/create', ensureAuthenticated, function(req, res, next) {
-  res.render('createIntake', { title: 'Submit an Intake' });
+    res.render('createIntake', { title: 'Submit an Intake' });
 });
 
 //creating the intake
 router.post('/create', upload.array('attachments', 10), function(req, res, next) {
-    console.log(req.body);
-    console.log(req.files);
     req.checkBody('requestName', 'Request Name is required').notEmpty();
     req.checkBody('description', 'A Description is required').notEmpty();
     req.checkBody('justification', 'A Business Justification is required').notEmpty();
@@ -67,6 +72,7 @@ router.post('/create', upload.array('attachments', 10), function(req, res, next)
     } else {
         let intake = new Intake();
 
+        //initialize intakes with given fields and default values
         intake.requestName = req.body.requestName.trim();
         intake.attachments = req.files;
         intake.current.updated = intake.requestDate = new Date();
@@ -126,15 +132,16 @@ router.get('/kanban', function(req, res) {
 //grab the updated phases from the kanban and update db
 router.post('/kanban/submit', altUpload.fields([]), function(req, res) {
     for(name in req.body) {
-        //intake moved to complete, remove from current intakes and move to completed
-        if(req.body[name]=='complete') {
-            Intake.findOne({requestName: name}, function(err, intake) {
-                if(err) {
-                    console.log('error moving intake to complete');
-                } else {
+        Intake.findOne({requestName: name}, function(err, intake) {
+            if(err)
+                req.flash('danger', err);
+            else {
+                //intake moved to complete, remove from current intakes and move to completed
+                if(req.body[intake.requestName]=='complete') {
                     let swap = new Completed(intake);
                     swap._id = mongoose.Types.ObjectId();
-                    timePhase(swap, req.body[name]);
+                    //document time of status change for reporting purposes
+                    timePhase(swap, req.body[intake.requestName]);
                     swap.phase = 'complete'
                     swap.isNew = true;
                     swap.save(function(err, completed) {
@@ -142,49 +149,35 @@ router.post('/kanban/submit', altUpload.fields([]), function(req, res) {
                             console.log(err);
                             return err;
                         } else {
-                            console.log(completed);
                             intake.remove();   
                         }
                     });                        
                     req.flash('success', 'Your changes have been successfully updated');
-                }
-            })
-        //intake not moved to complete, update intake and keep it in kanban
-        } else {
-            Intake.findOne({requestName: name}, function(err, intake) {
-                if(err)
-                    req.flash('danger', err);
-                else {
-                    console.log("before time phase");
-                    console.log(intake);
-                    timePhase(intake, req.body[name]);
-                    console.log("after time phase");
-                    console.log(intake);
-                    intake.phase = req.body[name];
+                } else {
+                    //intake not moved to complete, update intake and keep it in kanban
+                    timePhase(intake, req.body[intake.requestName]);
+                    intake.phase = req.body[intake.requestName];
                     intake.save(function(err, intake) {
                         if(err) {
                             console.log(err);
                             return err;
                         } else {
-                            console.log("updated " + intake.requestName);
                             req.flash('success', 'Your changes have been successfully updated');
                         }
-                    })                  
-                }
-            });
-        }
+                    }) 
+                }                                
+            }
+        });
     }
     res.redirect('/intakes/kanban');
 });
 
 router.post('/priorityupdate', altUpload.fields([]), function(req, res) {
-    console.log(req.body);
     for(name in req.body) {
         Intake.findOneAndUpdate({_id: name}, {priority: req.body[name]}, function(err, intake) {
             if(err)
                 req.flash('danger', err);
             else {
-                console.log("updated " + intake.requestName);
                 req.flash('success', 'Your changes have been successfully updated');
             }
         });
@@ -193,85 +186,158 @@ router.post('/priorityupdate', altUpload.fields([]), function(req, res) {
 })
 
 //edit an intake
-router.get('/edit/:id', function(req, res) {
-    Intake.findById(req.params.id, function(err, intake) {
-        res.render('editIntake', {
-            title: 'Edit Intake',
-            intake: intake
+router.get('/edit/:id/:completed', function(req, res) {
+    //'completed' flag is 0, this is a regular intake
+    if(req.params.completed==0) {
+        Intake.findById(req.params.id, function(err, intake) {
+            res.render('editIntake', {
+                title: 'Edit Intake',
+                intake: intake
+            });
         });
-    });
+    //completed flag is 1, this is a completed intake
+    } else {
+        Completed.findById(req.params.id, function(err, intake) {
+            res.render('editIntake', {
+                title: 'Edit Intake',
+                intake: intake
+            });
+        });
+    }
+    
 });
 
-router.post('/edit/:id', upload.array('attachments', 10), ensureAuthenticated, function(req, res, next) {
+router.post('/edit/:id/:completed', upload.array('attachments', 10), ensureAuthenticated, function(req, res, next) {
 
-    Intake.findById(req.params.id, function(err, intake) {
-        if(err) {
-            console.log(err);
-            return;
-        } else {
-            //updating all fields with new info
-            var diffDescript = false;
-            intake.requestName = req.body.requestName;
-            console.log(req.body.description);
-            //logic to only change description and justification for PMs and SUs
-            if(req.user.type=='PM' || req.user.type=='SU') {
-                intake.justification = req.body.justification;
-                if(req.body.description!=intake.current.description) {
-                    diffDescript = true;
-                }    
-            } 
-            //if the files are not empty, push to attachments
-            if(req.files!=undefined && req.files.length!=0) {
-                console.log("nonempty array");
-                intake.attachments.push(req.files);
-            }
-            intake.requestor = req.body.requestor;
-            intake.package = req.body.package;
-            intake.paesNumber = req.body.paesNumber;
-            intake.offerConfigurator = req.body.offerConfigurator;
-            intake.offerConfiguratorEstimate = req.body.offerConfiguratorEstimate;
-            intake.qa = req.body.qa;
-            intake.pm = req.body.pm;
-            intake.qaEstimate = req.body.qaEstimate;
-            //new version required, push current to prev and create new current
-            if( (req.body.targetDate!='' && differentTime(intake.current.targetDate, req.body.targetDate)) 
-            || diffDescript
-            || (req.body.targetSystem!=undefined && !compareSystem(req.body.targetSystem, intake.current.targetSystem))) {
-                 
-                var currVersion = intake.current.version;
-                var oldVersion = {};
-                oldVersion.targetDate = intake.current.targetDate;
-                console.log("Updated description:");
-                console.log(req.body.description);
-                oldVersion.description = intake.current.description;
-                oldVersion.targetSystem = intake.current.targetSystem;
-                oldVersion.version = currVersion;
-                intake.prev.push(oldVersion);
-                intake.current = {
-                    "description": req.body.description,
-                    "targetDate": req.body.targetDate!='' ? req.body.targetDate : intake.current.targetDate,
-                    "targetSystem": req.body.targetSystem,
-                    "version": currVersion+1,
-                    "updated": new Date()
+    //completed flag is not set, edit a regular intake
+    if(req.params.completed==0) {
+        Intake.findById(req.params.id, function(err, intake) {
+            if(err) {
+                console.log(err);
+                return;
+            } else {
+                //updating all fields with new info
+                var diffDescript = false;
+                intake.requestName = req.body.requestName;
+                //logic to only change description and justification for PMs and SUs
+                if(req.user.type=='PM' || req.user.type=='SU') {
+                    intake.justification = req.body.justification;
+                    if(req.body.description!=intake.current.description) {
+                        diffDescript = true;
+                    }    
+                } 
+                //if the files are not empty, push to attachments
+                if(req.files!=undefined && req.files.length!=0) {
+                    intake.attachments.push(req.files);
                 }
-                console.log(intake.prev);
-            }
-            //do the actual update
-            Intake.update({_id: req.params.id }, {"$set": intake}, function(err) {
-                if(err)
-                    console.log(err);
-                else {
-                    req.flash('success', 'Your changes have been successfully updated');
-                    res.redirect('/intakes');
+                intake.requestor = req.body.requestor;
+                intake.package = req.body.package;
+                intake.paesNumber = req.body.paesNumber;
+                intake.offerConfigurator = req.body.offerConfigurator;
+                intake.offerConfiguratorEstimate = req.body.offerConfiguratorEstimate;
+                intake.qa = req.body.qa;
+                intake.pm = req.body.pm;
+                intake.qaEstimate = req.body.qaEstimate;
+                //new version required, push current to prev and create new current
+                if( (req.body.targetDate!='' && differentTime(intake.current.targetDate, req.body.targetDate)) 
+                || diffDescript
+                || (req.body.targetSystem!=undefined && !compareSystem(req.body.targetSystem, intake.current.targetSystem))) {
+                     
+                    var currVersion = intake.current.version;
+                    var oldVersion = {};
+                    oldVersion.targetDate = intake.current.targetDate;
+                    oldVersion.description = intake.current.description;
+                    oldVersion.targetSystem = intake.current.targetSystem;
+                    oldVersion.version = currVersion;
+                    oldVersion.updated = intake.current.updated;
+                    intake.prev.push(oldVersion);
+                    intake.current = {
+                        "description": req.body.description,
+                        "targetDate": req.body.targetDate!='' ? req.body.targetDate : intake.current.targetDate,
+                        "targetSystem": req.body.targetSystem,
+                        "version": currVersion+1,
+                        "updated": new Date()
+                    }
                 }
-            });
-        }
-    });
+                //do the actual update
+                Intake.update({_id: req.params.id }, {"$set": intake}, function(err) {
+                    if(err)
+                        console.log(err);
+                    else {
+                        req.flash('success', 'Your changes have been successfully updated');
+                        res.redirect('/intakes');
+                    }
+                });
+            }
+        });
+    //completed flag is set, edit the completed intake
+    } else {
+        Completed.findById(req.params.id, function(err, intake) {
+            if(err) {
+                console.log(err);
+                return;
+            } else {
+                //updating all fields with new info
+                var diffDescript = false;
+                intake.requestName = req.body.requestName;
+                //logic to only change description and justification for PMs and SUs
+                if(req.user.type=='PM' || req.user.type=='SU') {
+                    intake.justification = req.body.justification;
+                    if(req.body.description!=intake.current.description) {
+                        diffDescript = true;
+                    }    
+                } 
+                //if the files are not empty, push to attachments
+                if(req.files!=undefined && req.files.length!=0) {
+                    intake.attachments.push(req.files);
+                }
+                intake.requestor = req.body.requestor;
+                intake.package = req.body.package;
+                intake.paesNumber = req.body.paesNumber;
+                intake.offerConfigurator = req.body.offerConfigurator;
+                intake.offerConfiguratorEstimate = req.body.offerConfiguratorEstimate;
+                intake.qa = req.body.qa;
+                intake.pm = req.body.pm;
+                intake.qaEstimate = req.body.qaEstimate;
+                //new version required, push current to prev and create new current
+                if( (req.body.targetDate!='' && differentTime(intake.current.targetDate, req.body.targetDate)) 
+                || diffDescript
+                || (req.body.targetSystem!=undefined && !compareSystem(req.body.targetSystem, intake.current.targetSystem))) {
+                     
+                    var currVersion = intake.current.version;
+                    var oldVersion = {};
+                    oldVersion.targetDate = intake.current.targetDate;
+                    oldVersion.description = intake.current.description;
+                    oldVersion.targetSystem = intake.current.targetSystem;
+                    oldVersion.version = currVersion;
+                    oldVersion.updated = intake.current.updated;
+                    intake.prev.push(oldVersion);
+                    intake.current = {
+                        "description": req.body.description,
+                        "targetDate": req.body.targetDate!='' ? req.body.targetDate : intake.current.targetDate,
+                        "targetSystem": req.body.targetSystem,
+                        "version": currVersion+1,
+                        "updated": new Date()
+                    }
+                }
+                //do the actual update
+                Completed.update({_id: req.params.id }, {"$set": intake}, function(err) {
+                    if(err)
+                        console.log(err);
+                    else {
+                        req.flash('success', 'Your changes have been successfully updated');
+                        res.redirect('/intakes');
+                    }
+                });
+            }
+        });
+    }
 });
 
 //click on a single intake
 router.get('/:id/version/:v', function(req, res) {
     Intake.findById(req.params.id, function(err, intake) {
+        //default, go to current version
         if(req.params.v==0) {
             res.render('intake', {
                 intake: intake,
@@ -282,10 +348,9 @@ router.get('/:id/version/:v', function(req, res) {
                 updated: intake.current.updated 
             });
         }      
+        //user specified different version to view
         else {
             var versionIndex = req.params.v-1;
-            console.log(versionIndex);
-            console.log(intake.prev);
             res.render('intake', {
                 intake: intake,
                 description: intake.prev[versionIndex].description,
@@ -300,7 +365,6 @@ router.get('/:id/version/:v', function(req, res) {
 
 //click on a single completed intake
 router.get('/completed/:id/version/:v', function(req, res) {
-    console.log('searching completed ' + req.params.id);
     Completed.findById(req.params.id, function(err, intake) {
         if(req.params.v==0) {
             res.render('intake', {
@@ -314,8 +378,6 @@ router.get('/completed/:id/version/:v', function(req, res) {
         }      
         else {
             var versionIndex = req.params.v-1;
-            console.log(versionIndex);
-            console.log(intake.prev);
             res.render('intake', {
                 intake: intake,
                 description: intake.prev[versionIndex].description,
@@ -356,7 +418,7 @@ router.delete('/:id', function(req, res) {
 });
 
 //posting a comment
-router.post('/comment/:id', altUpload.fields([]), ensureAuthenticated, function(req, res, next) {
+router.post('/comment/:id/:completed', altUpload.fields([]), ensureAuthenticated, function(req, res, next) {
     //check to see comment isn't empty
     req.checkBody('comment', 'Comment Field is Empty').notEmpty();
     
@@ -374,30 +436,47 @@ router.post('/comment/:id', altUpload.fields([]), ensureAuthenticated, function(
         comment.author.name = req.user.name;
         comment.text = req.body.comment;
 
-        //find the desired intake and push the comment to it's 'comments' field
-        Intake.findById(req.params.id, function(err, intake) {
-            if(err)
-                console.log(err);
-            else {
-                intake.comments.push(comment);
-                intake.save(function(err) {
-                    if(err) {
-                        console.log(err);
-                        return;
-                    } else {
-                        req.flash('success', 'Your Comment has been posted');
-                        res.redirect('/intakes/'+intake._id+'/version/0');
-                    }
-                });
-            }
-        });       
+        if(req.params.completed==1) {
+            Completed.findById(req.params.id, function(err, intake) {
+                if(err)
+                    console.log(err);
+                else {
+                    intake.comments.push(comment);
+                    intake.save(function(err) {
+                        if(err) {
+                            console.log(err);
+                            return;
+                        } else {
+                            req.flash('success', 'Your Comment has been posted');
+                            res.redirect('/intakes/completed/'+intake._id+'/version/0');
+                        }
+                    });
+                }
+            });
+        } else {
+            //find the desired intake and push the comment to it's 'comments' field
+            Intake.findById(req.params.id, function(err, intake) {
+                if(err)
+                    console.log(err);
+                else {
+                    intake.comments.push(comment);
+                    intake.save(function(err) {
+                        if(err) {
+                            console.log(err);
+                            return;
+                        } else {
+                            req.flash('success', 'Your Comment has been posted');
+                            res.redirect('/intakes/'+intake._id+'/version/0');
+                        }
+                    });
+                }
+            });   
+        }
     }
 });
 
 //document timing for phase change
 function timePhase(intake, to) {
-    console.log(intake.phase);
-    console.log(to);
     var currentTime = new Date();
     if(intake.phase=='requirements') {
         intake.requirements.left.push(currentTime);
