@@ -57,11 +57,15 @@
 }
 
 .kanban-card {
-  width: 200px;
-  height: 200px;
+  width: 175px;
+  height: 175px;
   overflow: hidden;
   margin: 5px;
   text-align: left;
+}
+
+.kanban-body {
+  padding: 10px;
 }
 
 .intakeField {
@@ -77,4 +81,11 @@
 
 .att {
   background-color: rgb(0,159,219) !important
+}
+
+.search-btn {
+  color: white;
+  background-color: transparent;
+  background-image: none;
+  border-color: white;
 }

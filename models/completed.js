@@ -45,7 +45,7 @@ let completedSchema = mongoose.Schema({
         entered: [Date],
         left: [Date]
     },
-    qa: {
+    qaTime: {
         entered: [Date],
         left: [Date]
     },

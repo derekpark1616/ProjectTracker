@@ -39,7 +39,7 @@ block content
             - var i = (current > 3 ? current - 2 : 1)
             if i!== 1
                 li.disabled
-                    a ...&npsp;
+                    a ...&nbsp;
             - for (; i <= current+2 && i <= pages; i++)
                 if i==1 || i==pages
                     //do nothing
@@ -48,10 +48,10 @@ block content
                         a #{i}&nbsp;
                 else
                     li
-                        a(href="/intakes/completed"+i) #{i}&nbsp;
-                if i==current+2 && i < pages
-                    li.disabled
-                        a ...&nbsp;
+                        a(href="/intakes/completed/"+i) #{i}&nbsp;
+            if i < pages
+                li.disabled
+                    a ...&nbsp;
             if(current==pages)
                 li.disabled
                     a #{pages}&nbsp;

@@ -120,7 +120,7 @@ router.post('/create', upload.array('attachments', 10), function(req, res, next)
 
 //render the kanban
 router.get('/kanban', function(req, res) {
-    Intake.find({}, function(err, intakes) {
+    Intake.find({}, null, {sort: { priority: 1 } }, function(err, intakes) {
         res.render('kanban', {
             title: 'Kanban',
             intakes: intakes
@@ -140,7 +140,7 @@ router.post('/kanban/submit', altUpload.fields([]), function(req, res) {
                     let swap = new Completed(intake);
                     swap._id = mongoose.Types.ObjectId();
                     //document time of status change for reporting purposes
-                    timePhase(swap, req.body[intake.requestName]);
+                    timePhase(swap, 'complete');
                     swap.phase = 'complete'
                     swap.isNew = true;
                     swap.save(function(err, completed) {
@@ -487,7 +487,7 @@ function timePhase(intake, to) {
         intake.qaTime.left.push(currentTime);
     } else if(intake.phase=='inapproval') {
         intake.inapproval.left.push(currentTime);
-    }
+    } 
 
     if(to=='requirements') {
         intake.requirements.entered.push(currentTime);
