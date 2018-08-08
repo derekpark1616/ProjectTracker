@@ -48,19 +48,20 @@
 }
 
 .swim-lane {
-  display: inline-table;
+  display: inline-block;
   width: 200px;
   height: 75vh;
   border: 1px solid black;
   font-family: cursive;
   text-align: center;
+  overflow: auto;
 }
 
 .kanban-card {
   width: 175px;
   height: 175px;
-  overflow: hidden;
-  margin: 5px;
+  overflow: auto;
+  margin: 12.5px;
   text-align: left;
 }
 

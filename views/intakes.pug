@@ -15,6 +15,8 @@ block content
                     th Priority
                     th Request Date
                     th Target Date
+                    th Developer
+                    th QA
                     th Requested By
             tbody
                 each intake, i in intakes
@@ -28,11 +30,13 @@ block content
                         else
                             td= intake.priority
                         td= intake.requestDate.toLocaleDateString("en-US")
-                        //td= intake.requestDate
-                        if intake.current.targetDate
-                            td= intake.current.targetDate
+                        td= intake.current.targetDate
+                        if user.type=="PM" || user.type=="SU"
+                            td.developer(contenteditable='true')= intake.offerConfigurator
+                            td.qa(contenteditable='true')= intake.qa
                         else
-                            td 
+                            td= intake.offerConfigurator
+                            td= intake.qa
                         td= intake.requestor
         hr
         if user.type=="PM" || user.type=="SU"
@@ -57,10 +61,7 @@ block content
                         td !{intake.current.description}
                         td !{intake.justification} 
                         td= intake.priority
-                        td= intake.requestDate.toDateString()
-                        if intake.current.targetDate
-                            td= intake.current.targetDate
-                        else
-                            td 
+                        td= intake.requestDate.toLocaleDateString("en-US")
+                        td= intake.current.targetDate
                         td= intake.requestor
     script(src='/javascripts/priorityUpdate.js')

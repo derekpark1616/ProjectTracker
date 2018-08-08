@@ -6,8 +6,14 @@ block content
     hr
     h4 Previous Versions:
     each version, i in intake.prev
-        a(href="/intakes/"+intake._id+"/version/"+version.version) #{version.version}&nbsp;
-    a(href="/intakes/"+intake._id+"/version/0") Current
+        if intake.phase!='complete'
+            a(href="/intakes/"+intake._id+"/version/"+version.version) #{version.version}&nbsp;
+        else
+            a(href="/intakes/completed/"+intake._id+"/version/"+version.version) #{version.version}&nbsp;
+    if intake.phase!='complete'
+        a(href="/intakes/"+intake._id+"/version/0") Current
+    else
+        a(href="/intakes/completed/"+intake._id+"/version/0") Current
     hr
     table
         thead
@@ -15,8 +21,18 @@ block content
             tr.intakeRow
                 td.intakeField
                     span.main-label Status:
-                td
-                    =intake.phase
+                if intake.phase=='requirements'
+                    td Requirements
+                if intake.phase=='readyfordevelopment'
+                    td Ready For Development
+                if intake.phase=='development'
+                    td Development
+                if intake.phase=='qa'
+                    td QA
+                if intake.phase=='inapproval'
+                    td Pending Approval
+                else
+                    td
             tr.intakeRow
                 td.intakeField
                     span.main-label Package:
@@ -25,7 +41,7 @@ block content
             tr.intakeRow
                 td.intakeField
                     span.main-label Attachments:
-                td 
+                td
                     each attachment, i in intake.attachments
                         a(href='/'+attachment.filename) #{attachment.originalname} 
                         br
@@ -75,8 +91,8 @@ block content
                     span.main-label QA Estimate:
                 td
                     =intake.qaEstimate
-    hr
-    if user
+    hr 
+    if user 
         if intake.phase!='complete'
             if user.type=='PM' || user.type=='SU' || user.type=='QA' || user.type=='OC'
                 a.btn.btn-primary(href='/intakes/edit/'+intake._id+'/0') Edit
@@ -92,8 +108,12 @@ block content
     br
     br
     each comment, i in intake.comments
-        div #{comment.posted.toDateString()} 
-        div #{comment.author.name}: !{comment.text}
+        div #{comment.posted.toLocaleDateString("en-US")} 
+        div.card
+            .card-header
+                h5.card-title  #{comment.author.name}:
+            .card-body         
+                p.card-text !{comment.text}
         hr
     if user
         if intake.phase!='complete'

@@ -163,8 +163,8 @@ router.post('/kanban/submit', altUpload.fields([]), function(req, res) {
                         } else {
                             req.flash('success', 'Your changes have been successfully updated');
                         }
-                    }) 
-                }                                
+                    })
+                }
             }
         });
     }
@@ -173,13 +173,37 @@ router.post('/kanban/submit', altUpload.fields([]), function(req, res) {
 
 router.post('/priorityupdate', altUpload.fields([]), function(req, res) {
     for(name in req.body) {
-        Intake.findOneAndUpdate({_id: name}, {priority: req.body[name]}, function(err, intake) {
-            if(err)
-                req.flash('danger', err);
-            else {
-                req.flash('success', 'Your changes have been successfully updated');
-            }
-        });
+        var type = name.substring(0,2);
+        var id = name.substring(2);
+        //extract type of change and make according modification to the intake
+        console.log("type: " + type);
+        console.log("id: " + id);
+        if(type=='pr') {
+            Intake.findOneAndUpdate({_id: id}, {priority: req.body[name]}, function(err, intake) {
+                if(err)
+                    req.flash('danger', err);
+                else {
+                    req.flash('success', 'Your changes have been successfully updated');
+                }
+            });
+        } else if(type=='de') {
+            Intake.findOneAndUpdate({_id: id}, {offerConfigurator: req.body[name]}, function(err, intake) {
+                if(err)
+                    req.flash('danger', err);
+                else {
+                    req.flash('success', 'Your changes have been successfully updated');
+                }
+            });
+        } else {
+            Intake.findOneAndUpdate({_id: id}, {qa: req.body[name]}, function(err, intake) {
+                if(err)
+                    req.flash('danger', err);
+                else {
+                    req.flash('success', 'Your changes have been successfully updated');
+                }
+            });
+        }
+        
     }
     res.redirect('/intakes');
 })
@@ -472,6 +496,21 @@ router.post('/comment/:id/:completed', altUpload.fields([]), ensureAuthenticated
             });   
         }
     }
+});
+
+router.post('/search', function(req,res) {
+    console.log(req.body.search)
+    Intake.find({$text: { $search: req.body.search}}, function(err, intakes) {
+        if(err) {
+            console.log(err);
+            return;
+        } else {
+            res.render('intakes', {
+                title: 'Intakes',
+                intakes: intakes
+            });
+        }
+    })
 });
 
 //document timing for phase change

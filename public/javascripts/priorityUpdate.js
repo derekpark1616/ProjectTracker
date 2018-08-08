@@ -1,20 +1,37 @@
 //global variable to track updates made to kanban
-var priorityUpdates = {};
+var trackerUpdates = {};
 
-//track which priorities were updated with an event listener
-var editableArray = document.querySelectorAll('td.priority');
-editableArray.forEach(function (editablePriority) {
+//track changes to priority, developer, qa with event listeners
+var priorityArray = document.querySelectorAll('td.priority');
+var developerArray = document.querySelectorAll('td.developer');
+var qaArray = document.querySelectorAll('td.qa');
+priorityArray.forEach(function (editablePriority) {
     editablePriority.addEventListener('input', function() {
         console.log(this.parentElement.id);
-        priorityUpdates[this.parentElement.id] = this.innerText;
+        //prepend the type of update this is (pr)
+        trackerUpdates['pr'+this.parentElement.id] = this.innerText;
+    });
+});
+developerArray.forEach(function (dev) {
+    dev.addEventListener('input', function() {
+        console.log(this.parentElement.id);
+        //prepend the type of update this is (de)
+        trackerUpdates['de'+this.parentElement.id] = this.innerText;
+    });
+});
+qaArray.forEach(function (qa) {
+    qa.addEventListener('input', function() {
+        console.log(this.parentElement.id);
+        //prepend the type of update this is (qa)
+        trackerUpdates['qa'+this.parentElement.id] = this.innerText;
     });
 });
 
 //send the updates to the backend
 function submitPriorities() {
     var formData = new FormData();
-    for(name in priorityUpdates) {
-        formData.append(name, priorityUpdates[name]);
+    for(name in trackerUpdates) {
+        formData.append(name, trackerUpdates[name]);
     }
     fetch('/intakes/priorityupdate', {
         method: 'POST',
@@ -22,7 +39,7 @@ function submitPriorities() {
     }).then(function(response) {
         if(response.ok) {
             //clear the updates
-            priorityUpdates = {};
+            trackerUpdates = {};
             window.location.href='/intakes'
             return response.blob();
         }         
