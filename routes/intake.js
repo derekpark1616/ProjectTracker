@@ -24,7 +24,7 @@ router.get('/', function(req,res) {
             console.log(err);
         } else {
             res.render('intakes', {
-                title: 'Intakes',
+                title: 'All Requests',
                 intakes: intakes
             });
         }
@@ -251,7 +251,10 @@ router.post('/edit/:id/:completed', upload.array('attachments', 10), ensureAuthe
                 } 
                 //if the files are not empty, push to attachments
                 if(req.files!=undefined && req.files.length!=0) {
-                    intake.attachments.push(req.files);
+                    //intake.attachments.push(req.files);
+                    for(var i = 0; i < req.files.length; i++) {
+                        intake.attachments.push(req.files[i]);
+                    }
                 }
                 intake.requestor = req.body.requestor;
                 intake.package = req.body.package;
@@ -312,7 +315,9 @@ router.post('/edit/:id/:completed', upload.array('attachments', 10), ensureAuthe
                 } 
                 //if the files are not empty, push to attachments
                 if(req.files!=undefined && req.files.length!=0) {
-                    intake.attachments.push(req.files);
+                    for(var i = 0; i < req.files.length; i++) {
+                        intake.attachments.push(req.files[i]);
+                    }
                 }
                 intake.requestor = req.body.requestor;
                 intake.package = req.body.package;
@@ -448,7 +453,8 @@ router.post('/comment/:id/:completed', altUpload.fields([]), ensureAuthenticated
     let errors = req.validationErrors();
     if(errors) {
         console.log(errors);
-        res.redirect('/intakes');
+        //res.redirect('/intakes');
+        return;
     } else {
         //create the comment
         let comment = {

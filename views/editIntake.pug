@@ -1,6 +1,7 @@
 extends layout
 
 block content
+  br
   h1= title
   if intake.phase=='complete'
     form#editForm(method='POST', action='/intakes/edit/'+intake._id+'/1', enctype='multipart/form-data')
@@ -24,7 +25,7 @@ block content
         each attachment, i in intake.attachments
           a(href='/'+attachment.filename) #{attachment.originalname} 
           br
-        input.form-control(name='attachments', type='file', multiple)
+        input(name='attachments', type='file', multiple)
       #form-group 
         label.main-label Target Date
         br
@@ -49,7 +50,7 @@ block content
           input.form-control(name='description', type='hidden')
           div#descriptionQuill.form-control !{intake.current.description}
         else 
-          div.form-control(name='description') !{intake.current.description}
+          div(name='description') !{intake.current.description}
         //#form-group 
           label.main-label Business Justification
           br
@@ -66,7 +67,7 @@ block content
           input.form-control(name='justification', type='hidden')
           div#justificationQuill.form-control !{intake.justification}
         else
-          div.form-control(name='justification') !{intake.justification}
+          div(name='justification') !{intake.justification}
       #form-group 
         label.main-label Requestor
         br
@@ -88,16 +89,22 @@ block content
         br
         if user.type=='PM' || user.type=='SU'
           if intake.current.targetSystem.includes("USC")
-            input(name='targetSystem[]', type='checkbox', value='USC', checked)
+            label
+              input(name='targetSystem[]', type='checkbox', value='USC', checked)
+              | &nbsp;USC
           else
-            input(name='targetSystem[]', type='checkbox', value='USC')
-          label &nbsp;&nbsp;USC
+            label
+              input(name='targetSystem[]', type='checkbox', value='USC')
+              | &nbsp;USC
           br
           if intake.current.targetSystem.includes("LSCRM")
-            input(name='targetSystem[]', type='checkbox', value='LSCRM', checked)
+            label
+              input(name='targetSystem[]', type='checkbox', value='LSCRM', checked)
+              | &nbsp;LSCRM
           else
-            input(name='targetSystem[]', type='checkbox', value='LSCRM')
-          label &nbsp;&nbsp;LSCRM
+            label
+              input(name='targetSystem[]', type='checkbox', value='LSCRM')
+              | &nbsp;LSCRM
         else
           if intake.current.targetSystem.includes("USC")
             input(name='targetSystem[]', type='checkbox', value='USC', checked, onclick="return false;")
@@ -158,7 +165,7 @@ block content
         else 
           input.form-control(name='pm', type='text', value=intake.pm, readonly)
       br
-      input.btn.btn-primary(type='submit', value='Submit')
+      input.btn.btn-primary.btn-spacing(type='submit', value='Submit')
       a.btn.btn-danger(href='/intakes') Cancel
   else
     form#editForm(method='POST', action='/intakes/edit/'+intake._id+'/0', enctype='multipart/form-data')
@@ -182,7 +189,7 @@ block content
         each attachment, i in intake.attachments
           a(href='/'+attachment.filename) #{attachment.originalname} 
           br
-        input.form-control(name='attachments', type='file', multiple)
+        input(name='attachments', type='file', multiple)
       #form-group 
         label.main-label Target Date
         br
@@ -207,7 +214,7 @@ block content
             input.form-control(name='description', type='hidden')
             div#descriptionQuill.form-control !{intake.current.description}
           else 
-            div.form-control(name='description') !{intake.current.description}
+            div(name='description') !{intake.current.description}
         //#form-group 
           label.main-label Business Justification
           br
@@ -224,7 +231,7 @@ block content
             input.form-control(name='justification', type='hidden')
             div#justificationQuill.form-control !{intake.justification}
           else
-            div.form-control(name='justification') !{intake.justification}
+            div(name='justification') !{intake.justification}
       #form-group 
         label.main-label Requestor
         br
@@ -246,16 +253,22 @@ block content
         br
         if user.type=='PM' || user.type=='SU'
           if intake.current.targetSystem.includes("USC")
-            input(name='targetSystem[]', type='checkbox', value='USC', checked)
+            label
+              input(name='targetSystem[]', type='checkbox', value='USC', checked)
+              | &nbsp;USC
           else
-            input(name='targetSystem[]', type='checkbox', value='USC')
-          label &nbsp;&nbsp;USC
+            label
+              input(name='targetSystem[]', type='checkbox', value='USC')
+              | &nbsp;USC
           br
           if intake.current.targetSystem.includes("LSCRM")
-            input(name='targetSystem[]', type='checkbox', value='LSCRM', checked)
+            label
+              input(name='targetSystem[]', type='checkbox', value='LSCRM', checked)
+              | &nbsp;LSCRM
           else
-            input(name='targetSystem[]', type='checkbox', value='LSCRM')
-          label &nbsp;&nbsp;LSCRM
+            label
+              input(name='targetSystem[]', type='checkbox', value='LSCRM')
+              | &nbsp;LSCRM
         else
           if intake.current.targetSystem.includes("USC")
             input(name='targetSystem[]', type='checkbox', value='USC', checked, onclick="return false;")
@@ -316,8 +329,10 @@ block content
         else 
           input.form-control(name='pm', type='text', value=intake.pm, readonly)
       br
-      input.btn.btn-primary(type='submit', value='Submit')
+      input.btn.btn-primary.btn-spacing(type='submit', value='Submit')
       a.btn.btn-danger(href='/intakes') Cancel
+    br
+  script(src='/bower_components/jquery/dist/jquery.js')
   script(src='https://cdn.quilljs.com/1.3.6/quill.js')
   script(src='https://cdn.quilljs.com/1.3.6/quill.min.js')
   script(src='/javascripts/editIntake.js')

@@ -1,19 +1,39 @@
 extends layout
 
 block content
+    br
     h1= intake.requestName
-    h5 Submitted by #{intake.requestor}
+    h5(style='display:inline-block') Submitted by #{intake.requestor}
+    if user 
+        if intake.phase!='complete'
+            if user.type=='PM' || user.type=='SU' || user.type=='QA' || user.type=='OC'
+                a.btn.btn-primary.btn-spacing(style='float:right', href='/intakes/edit/'+intake._id+'/0') Edit
+        else
+            if user.type=='PM' || user.type=='SU' || user.type=='QA' || user.type=='OC'
+                a.btn.btn-primary.btn-spacing(style='float:right', href='/intakes/edit/'+intake._id+'/1') Edit
     hr
     h4 Previous Versions:
     each version, i in intake.prev
         if intake.phase!='complete'
-            a(href="/intakes/"+intake._id+"/version/"+version.version) #{version.version}&nbsp;
+            if version.version==v
+                a.disabled #{version.version}&nbsp;
+            else
+                a(href="/intakes/"+intake._id+"/version/"+version.version) #{version.version}&nbsp;
         else
-            a(href="/intakes/completed/"+intake._id+"/version/"+version.version) #{version.version}&nbsp;
+            if version.version==v
+                a.disabled #{version.version}&nbsp;
+            else
+                a(href="/intakes/completed/"+intake._id+"/version/"+version.version) #{version.version}&nbsp;
     if intake.phase!='complete'
-        a(href="/intakes/"+intake._id+"/version/0") Current
+        if v=='current'
+            a.disabled Current
+        else
+            a(href="/intakes/"+intake._id+"/version/0") Current
     else
-        a(href="/intakes/completed/"+intake._id+"/version/0") Current
+        if v=='current'
+            a.disabled Current
+        else
+            a(href="/intakes/completed/"+intake._id+"/version/0") Current
     hr
     table
         thead
@@ -30,7 +50,9 @@ block content
                 if intake.phase=='qa'
                     td QA
                 if intake.phase=='inapproval'
-                    td Pending Approval
+                    td In Approval
+                if intake.phase=='complete'
+                    td Complete
                 else
                     td
             tr.intakeRow
@@ -95,7 +117,7 @@ block content
     if user 
         if intake.phase!='complete'
             if user.type=='PM' || user.type=='SU' || user.type=='QA' || user.type=='OC'
-                a.btn.btn-primary(href='/intakes/edit/'+intake._id+'/0') Edit
+                a.btn.btn-primary.btn-spacing(href='/intakes/edit/'+intake._id+'/0') Edit
             if user.type=='PM' || user.type=='SU'
                 button.btn.btn-danger(data-toggle="modal", data-target="#deleteModal") Delete
         else
@@ -108,7 +130,7 @@ block content
     br
     br
     each comment, i in intake.comments
-        div #{comment.posted.toLocaleDateString("en-US")} 
+        div #{comment.posted.toLocaleString('en-US')} 
         div.card
             .card-header
                 h5.card-title  #{comment.author.name}:
@@ -120,14 +142,17 @@ block content
             form(method='POST', action='/intakes/comment/'+intake._id+'/0', enctype='multipart/form-data')
                 #form-group 
                     br
-                    textarea.form-control(name='comment')
-                input.btn.btn-primary(type='submit', value='Post')
+                    textarea.form-control(name='comment', placeholder='Add a comment here')
+                br
+                input.btn.btn-primary.btn-spacing(type='submit', value='Post')
         else
             form(method='POST', action='/intakes/comment/'+intake._id+'/1', enctype='multipart/form-data')
                 #form-group 
                     br
-                    textarea.form-control(name='comment')
-                input.btn.btn-primary(type='submit', value='Post')
+                    textarea.form-control(name='comment', placeholder='Add a comment here')
+                br
+                input.btn.btn-primary.btn-spacing(type='submit', value='Post')
+    br
             
     div#deleteModal.modal.fade(role="dialog")
         div.modal-dialog
@@ -135,5 +160,5 @@ block content
                 div.modal-body
                     p Are you sure you want to delete this intake?
                 div.modal-footer
-                    a.btn.btn-primary.delete-intake(href='#', data-dismiss="modal", data-id=intake._id) Delete
+                    a.btn.btn-primary.btn-spacing.delete-intake(href='#', data-dismiss="modal", data-id=intake._id) Delete
                     button.btn.btn-danger(data-dismiss="modal") Cancel

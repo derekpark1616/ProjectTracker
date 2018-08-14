@@ -90,3 +90,11 @@
   background-image: none;
   border-color: white;
 }
+
+.scrollable {
+  overflow-x: auto;
+}
+
+.btn-spacing {
+  margin-right: 5px;
+}

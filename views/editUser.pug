@@ -23,7 +23,7 @@ block content
                     input(name='type', type='radio', value='PM')
                     | Project Manager
                 br
-            input.btn.btn-primary(type='submit', value='Submit')
+            input.btn.btn-primary.btn-spacing(type='submit', value='Submit')
         button.btn.btn-danger(data-toggle="modal", data-target="#deleteModal") Delete
     else 
         h1 You Do Not Have The Permission To Do This
@@ -34,5 +34,5 @@ block content
                 div.modal-body
                     p Are you sure you want to delete this user?
                 div.modal-footer
-                    a.btn.btn-primary.delete-user(href='#', data-dismiss="modal", data-id=person._id) Delete
+                    a.btn.btn-primary.btn-spacing.delete-user(href='#', data-dismiss="modal", data-id=person._id) Delete
                     button.btn.btn-danger(data-dismiss="modal") Cancel

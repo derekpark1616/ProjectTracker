@@ -1,6 +1,7 @@
 extends layout
 
 block content
+    br
     h1= title
     br
     p A Swimming-Lanes View of Current ADE Projects
@@ -242,5 +243,5 @@ block content
                 div.modal-body
                     p Are you sure you want to submit these changes?
                 div.modal-footer
-                    button.btn.btn-primary(onclick="submitKanban()", data-dismiss="modal") Submit 
+                    button.btn.btn-primary.btn-spacing(onclick="submitKanban()", data-dismiss="modal") Submit 
                     button.btn.btn-danger(data-dismiss="modal") Cancel

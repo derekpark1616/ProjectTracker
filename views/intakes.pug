@@ -1,67 +1,73 @@
 extends layout
 
 block content
+    br
     h1 #{title}
     br
     p Click on any column headers to sort requests by that field
     hr
-    if user
-        table.table-hover.table-striped#request-table
-            thead
-                tr
-                    th Request Name
-                    th Description
-                    th Business Justification
-                    th Priority
-                    th Request Date
-                    th Target Date
-                    th Developer
-                    th QA
-                    th Requested By
-            tbody
-                each intake, i in intakes
-                    tr(id=intake._id)
-                        td
-                            a(href="/intakes/"+intake._id+"/version/0", style='color:gray')= intake.requestName
-                        td !{intake.current.description}
-                        td !{intake.justification} 
-                        if user.type=="PM" || user.type=="SU"
-                            td.priority(contenteditable='true')= intake.priority
-                        else
-                            td= intake.priority
-                        td= intake.requestDate.toLocaleDateString("en-US")
-                        td= intake.current.targetDate
-                        if user.type=="PM" || user.type=="SU"
-                            td.developer(contenteditable='true')= intake.offerConfigurator
-                            td.qa(contenteditable='true')= intake.qa
-                        else
-                            td= intake.offerConfigurator
-                            td= intake.qa
-                        td= intake.requestor
-        hr
-        if user.type=="PM" || user.type=="SU"
-            button.btn.btn-primary(onclick="submitPriorities()") Submit
-            a.btn.btn-danger(href='/intakes') Cancel
-    else
-        table.table-hover.table-striped#request-table
-            thead
-                tr
-                    th Request Name
-                    th Description
-                    th Business Justification
-                    th Priority
-                    th Request Date
-                    th Target Date
-                    th Requested By
-            tbody
-                each intake, i in intakes
+    .scrollable
+        if user
+            table.table-hover.table-striped#request-table
+                thead
                     tr
-                        td
-                            a(href="/intakes/"+intake._id+"/version/0", style='color:gray')= intake.requestName
-                        td !{intake.current.description}
-                        td !{intake.justification} 
-                        td= intake.priority
-                        td= intake.requestDate.toLocaleDateString("en-US")
-                        td= intake.current.targetDate
-                        td= intake.requestor
+                        th Request Name
+                        th Description
+                        th Business Justification
+                        th Priority
+                        th Request Date
+                        th Target Date
+                        th Developer
+                        th QA
+                        th Requested By
+                tbody
+                    each intake, i in intakes
+                        tr(id=intake._id)
+                            td
+                                a(href="/intakes/"+intake._id+"/version/0", style='color:gray')= intake.requestName
+                            td !{intake.current.description}
+                            td !{intake.justification} 
+                            if user.type=="PM" || user.type=="SU"
+                                td.priority(contenteditable='true')= intake.priority
+                            else
+                                td= intake.priority
+                            td= intake.requestDate.toLocaleDateString("en-US")
+                            td= intake.current.targetDate
+                            if user.type=="PM" || user.type=="SU"
+                                td.developer(contenteditable='true')= intake.offerConfigurator
+                                td.qa(contenteditable='true')= intake.qa
+                            else
+                                td= intake.offerConfigurator
+                                td= intake.qa
+                            td= intake.requestor
+            hr
+            if user.type=="PM" || user.type=="SU"
+                button.btn.btn-primary.btn-spacing(onclick="submitPriorities()") Submit
+                a.btn.btn-danger(href='/intakes') Cancel
+        else
+            table.table-hover.table-striped#request-table
+                thead
+                    tr
+                        th Request Name
+                        th Description
+                        th Business Justification
+                        th Priority
+                        th Request Date
+                        th Target Date
+                        th Developer
+                        th QA
+                        th Requested By
+                tbody
+                    each intake, i in intakes
+                        tr
+                            td(style='width:300px')
+                                a(href="/intakes/"+intake._id+"/version/0", style='color:gray')= intake.requestName
+                            td(style='width:600px') !{intake.current.description}
+                            td(style='width:500px') !{intake.justification} 
+                            td(style='width:40px')= intake.priority
+                            td(style='width:100px')= intake.requestDate.toLocaleDateString("en-US")
+                            td(style='width:100px')= intake.current.targetDate
+                            td(style='width:150px')= intake.offerConfigurator
+                            td(style='width:150px')= intake.qa
+                            td(style='width:100px')= intake.requestor
     script(src='/javascripts/priorityUpdate.js')

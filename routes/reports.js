@@ -4,6 +4,38 @@ var Intake = require('../models/intake');
 var Completed = require('../models/completed');
 var router = express.Router();
 
+const styles = {
+    headerDark: {
+      fill: {
+        fgColor: {
+          rgb: 'FF000000'
+        }
+      },
+      font: {
+        color: {
+          rgb: 'FFFFFFFF'
+        },
+        sz: 14,
+        bold: true,
+        underline: true
+      }
+    },
+    cellPink: {
+      fill: {
+        fgColor: {
+          rgb: 'FFFFCCFF'
+        }
+      }
+    },
+    cellGreen: {
+      fill: {
+        fgColor: {
+          rgb: 'FF00FF00'
+        }
+      }
+    }
+  };
+
 //sets headings for the in progress excel report
 const inProgressHeading = [
     ['Request Name', 'Status', 'Create Date', 'Target Date', 'Package #', 'Detailed Description',
@@ -30,59 +62,73 @@ const statusHeading = [
 const inProgressSpec = {
     requestName: {
         displayName: 'Request Name',
-        width: 100
+        width: 100,
+        headerStyle: styles.headerDark
     },
     phase: {
         displayName: 'Status',
-        width: 100
+        width: 100,
+        headerStyle: styles.headerDark
     },
     requestDate: {
         displayName: 'Create Date',
-        width: 100
+        width: 100,
+        headerStyle: styles.headerDark
     },
     targetDate: {
         displayName: 'Target Date',
-        width: 100
+        width: 100,
+        headerStyle: styles.headerDark
     },
     package: {
         displayName: 'Package #',
-        width: 100
+        width: 100,
+        headerStyle: styles.headerDark
     },
     description: {
         displayName: 'Detailed Description',
-        width: 100
+        width: 100,
+        headerStyle: styles.headerDark
     },
     targetSystem: {
         displayName: 'Target System',
-        width: 100
+        width: 100,
+        headerStyle: styles.headerDark
     },
     justification: {
         displayName: 'Business Justification',
-        width: 100
+        width: 100,
+        headerStyle: styles.headerDark
     },
     requestor: {
         displayName: 'Requestor',
-        width: 100
+        width: 100,
+        headerStyle: styles.headerDark
     },
     paesNumber: {
         displayName: 'Approver & PAES',
-        width: 100
+        width: 100,
+        headerStyle: styles.headerDark
     },
     offerConfigurator: {
         displayName: 'Offer Configurator',
-        width: 100
+        width: 100,
+        headerStyle: styles.headerDark
     },
     offerConfiguratorEstimate: {
         displayName: 'Offer Configurator Estimate',
-        width: 100
+        width: 100,
+        headerStyle: styles.headerDark
     },
     qa: {
         displayName: 'QA',
-        width: 100
+        width: 100,
+        headerStyle: styles.headerDark
     },
     qaEstimate: {
         displayName: 'QA Estimate',
-        width: 100
+        width: 100,
+        headerStyle: styles.headerDark
     }
 
 }
@@ -91,67 +137,83 @@ const inProgressSpec = {
 const versionsSpec = {
     requestName: {
         displayName: 'Request Name',
-        width: 100
+        width: 100,
+        headerStyle: styles.headerDark
     },
     version: {
         displayName: 'Version',
-        width:100
+        width: 100,
+        headerStyle: styles.headerDark
     },
     updated: {
         displayName: 'Updated',
-        width:100
+        width: 100,
+        headerStyle: styles.headerDark
     },
     phase: {
         displayName: 'Status',
-        width: 100
+        width: 100,
+        headerStyle: styles.headerDark
     },
     requestDate: {
         displayName: 'Create Date',
-        width: 100
+        width: 100,
+        headerStyle: styles.headerDark
     },
     targetDate: {
         displayName: 'Target Date',
-        width: 100
+        width: 100,
+        headerStyle: styles.headerDark
     },
     package: {
         displayName: 'Package #',
-        width: 100
+        width: 100,
+        headerStyle: styles.headerDark
     },
     description: {
         displayName: 'Detailed Description',
-        width: 100
+        width: 100,
+        headerStyle: styles.headerDark
     },
     targetSystem: {
         displayName: 'Target System',
-        width: 100
+        width: 100,
+        headerStyle: styles.headerDark
     },
     justification: {
         displayName: 'Business Justification',
-        width: 100
+        width: 100,
+        headerStyle: styles.headerDark
     },
     requestor: {
         displayName: 'Requestor',
-        width: 100
+        width: 100,
+        headerStyle: styles.headerDark
     },
     paesNumber: {
         displayName: 'Approver & PAES',
-        width: 100
+        width: 100,
+        headerStyle: styles.headerDark
     },
     offerConfigurator: {
         displayName: 'Offer Configurator',
-        width: 100
+        width: 100,
+        headerStyle: styles.headerDark
     },
     offerConfiguratorEstimate: {
         displayName: 'Offer Configurator Estimate',
-        width: 100
+        width: 100,
+        headerStyle: styles.headerDark
     },
     qa: {
         displayName: 'QA',
-        width: 100
+        width: 100,
+        headerStyle: styles.headerDark
     },
     qaEstimate: {
         displayName: 'QA Estimate',
-        width: 100
+        width: 100,
+        headerStyle: styles.headerDark
     }
 
 }
@@ -160,51 +222,63 @@ const versionsSpec = {
 const statusSpec = {
     requestName: {
         displayName: 'Request Name',
-        width: 100
+        width: 100,
+        headerStyle: styles.headerDark
     },
     package: {
         displayName: 'Package #',
-        width: 100
+        width: 100,
+        headerStyle: styles.headerDark
     },
     requirementsHours: {
         displayName: 'Time in Requirements (Hours)',
-        width: 100
+        width: 100,
+        headerStyle: styles.headerDark
     },
     requirementsPercent: {
         displayName: 'Time in Requirements (%)',
-        width: 100
+        width: 100,
+        headerStyle: styles.headerDark
     },
     readyForDevHours: {
         displayName: 'Time in Ready for Development (Hours)',
-        width: 100
+        width: 100,
+        headerStyle: styles.headerDark
     },
     readyForDevPercent: {
         displayName: 'Time in Ready for Development (%)',
-        width: 100
+        width: 100,
+        headerStyle: styles.headerDark
     },
     developmentHours: {
         displayName: 'Time in Development (Hours)',
-        width: 100
+        width: 100,
+        headerStyle: styles.headerDark
     },
     developmentPercent: {
         displayName: 'Time in Development (%)',
-        width: 100
+        width: 100,
+        headerStyle: styles.headerDark
     },
     qaHours: {
         displayName: 'Time in QA (Hours)',
-        width: 100
+        width: 100,
+        headerStyle: styles.headerDark
     },
     qaPercent: {
         displayName: 'Time in QA (%)',
-        width: 100
+        width: 100,
+        headerStyle: styles.headerDark
     },
     approvalHours: {
         displayName: 'Time in Approval (Hours)',
-        width: 100
+        width: 100,
+        headerStyle: styles.headerDark
     },
     approvalPercent: {
         displayName: 'Time in Approval (%)',
-        width: 100
+        width: 100,
+        headerStyle: styles.headerDark
     },
 
 }
@@ -249,7 +323,7 @@ router.get('/in-progress', function(req, res) {
         }
         //builds excel report using heading, specs, and data
         const report = excel.buildExport([{
-            heading: inProgressHeading,
+            //heading: inProgressHeading,
             specification: inProgressSpec,
             data: dataset
         }]);
@@ -293,7 +367,7 @@ router.get('/completed', function(req, res) {
         }
         //builds excel report using heading, specs, and data
         const report = excel.buildExport([{
-            heading: inProgressHeading,
+            //heading: inProgressHeading,
             specification: inProgressSpec,
             data: dataset
         }]);
@@ -379,7 +453,7 @@ router.post('/versions', function(req, res) {
             }
             //builds excel report using heading, specs, and data
             const report = excel.buildExport([{
-                heading: versionsHeading,
+                //heading: versionsHeading,
                 specification: versionsSpec,
                 data: dataset
             }]);
@@ -423,7 +497,7 @@ router.post('/status', function(req, res) {
             }
             //builds excel report using heading, specs, and data
             const report = excel.buildExport([{
-                heading: statusHeading,
+                //heading: statusHeading,
                 specification: statusSpec,
                 data: dataset
             }]);
