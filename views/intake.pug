@@ -40,6 +40,11 @@ block content
         tbody
             tr.intakeRow
                 td.intakeField
+                    span.main-label Created:
+                td
+                    =intake.requestDate.toLocaleString('en-US')
+            tr.intakeRow
+                td.intakeField
                     span.main-label Status:
                 if intake.phase=='requirements'
                     td Requirements
