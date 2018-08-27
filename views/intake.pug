@@ -11,6 +11,8 @@ block content
         else
             if user.type=='PM' || user.type=='SU' || user.type=='QA' || user.type=='OC'
                 a.btn.btn-primary.btn-spacing(style='float:right', href='/intakes/edit/'+intake._id+'/1') Edit
+            if user.type=='PM' || user.type=='SU'
+                a.btn.btn-danger.btn-spacing(style='float:right', href='/intakes/return/'+intake._id) Return to Requests
     hr
     h4 Previous Versions:
     each version, i in intake.prev

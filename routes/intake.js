@@ -519,6 +519,32 @@ router.post('/search', function(req,res) {
     })
 });
 
+router.get('/return/:id', function(req,res) {
+    Completed.findById(req.params.id, function(err, intake) {
+        if(!err) {
+            let swap = new Intake(intake);
+            console.log(swap);
+            swap._id = mongoose.Types.ObjectId();
+            //document time of status change for reporting purposes
+            timePhase(swap, 'requirements');
+            swap.phase = 'requirements'
+            swap.isNew = true;
+            swap.save(function(err, completed) {
+                if(err) {
+                    console.log(err);
+                    req.flash('danger', 'There was an error in returning the intake');
+                    res.redirect('/intakes/');
+                    return err;
+                } else {
+                    intake.remove();   
+                    req.flash('success', 'This intake has been returned to in progress');
+                    res.redirect('/intakes/');
+                }
+            });  
+        }
+    });
+});
+
 //document timing for phase change
 function timePhase(intake, to) {
     var currentTime = new Date();
