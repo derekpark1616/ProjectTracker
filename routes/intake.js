@@ -520,16 +520,16 @@ router.post('/search', function(req,res) {
 });
 
 router.get('/return/:id', function(req,res) {
-    Completed.findById(req.params.id, function(err, intake) {
+    Completed.findById(req.params.id, function(err, completed) {
         if(!err) {
-            let swap = new Intake(intake);
+            let swap = new Intake(completed);
             console.log(swap);
             swap._id = mongoose.Types.ObjectId();
             //document time of status change for reporting purposes
             timePhase(swap, 'requirements');
             swap.phase = 'requirements'
             swap.isNew = true;
-            swap.save(function(err, completed) {
+            swap.save(function(err, intake) {
                 if(err) {
                     console.log(err);
                     req.flash('danger', 'There was an error in returning the intake');
