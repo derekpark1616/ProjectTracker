@@ -59,8 +59,8 @@ router.get('/create', ensureAuthenticated, function(req, res, next) {
 //creating the intake
 router.post('/create', upload.array('attachments', 10), function(req, res, next) {
     req.checkBody('requestName', 'Request Name is required').notEmpty();
-    req.checkBody('description', 'A Description is required').notEmpty();
-    req.checkBody('justification', 'A Business Justification is required').notEmpty();
+    req.checkBody('description', 'A Description is required').isLength({ min: 12});
+    req.checkBody('justification', 'A Business Justification is required').isLength({ min: 12});
     
     let errors = req.validationErrors();
     if(errors) {
