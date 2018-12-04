@@ -536,7 +536,7 @@ router.get('/return/:id', function(req,res) {
                     res.redirect('/intakes/');
                     return err;
                 } else {
-                    intake.remove();   
+                    completed.remove();   
                     req.flash('success', 'This intake has been returned to in progress');
                     res.redirect('/intakes/');
                 }
